@@ -7,13 +7,10 @@
 class Contador
 {
 	public:
-		int t_esperaPouso;
-		int t_esperaDecolagem;
-		int c_esperaPouso;
-		int c_Pousado;
+		double c_Pousado;
 		Contador();
 		~Contador();
-		double calculaMediaFila(Fila p, int passoAtual, bool espera);
+		double calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pouso);
 		double tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
 		double tempo_esperaDecolagem();
 		double combustivel_esperaPouso();

@@ -5,7 +5,7 @@ RM     = rm
 
 
 simulacao:  Aviao.o Celula.o Fila.o Contador.o main.o 
-	$(CC) Aviao.o Celula.o Fila.o main.o -o simulacao -lm
+	$(CC) Aviao.o Celula.o Fila.o Contador.o main.o -o simulacao -lm
 
 main.o: main.cpp Celula.h  Aviao.h Fila.h Categoria.h Contador.h  
 	$(CC) $(CFLAGS) -c main.cpp 

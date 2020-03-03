@@ -16,25 +16,25 @@ int main()
 	cout<<"Digite o tempo de simulação:";
 	cin>>ts;
 	cout<<"\n\n";
-	int i = 0;
+
 	std::string cia;
 	std::string aeroporto;
 	int numero_voo;
 	int tempo;
 	bool emergencia;
 	bool pouso;
-	int e = 0;
-	srand(7);
 
+	Contador count;
 	Fila p1, p2, p3;
 
-	int zero = 0;
+
+	int i = 0;
 	int navioes = 0;
 	int qntdd;
-	double a;
-	int liberada[3] = {1, 1, 1};
-	int pista_tamanho;
+	double aleat;
 
+	srand(7);
+	
 
 	/* Considero cada passo de tempo de simulação seja equivalente a uma hora na vida real
 	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
@@ -43,7 +43,7 @@ int main()
 
 	while(i < ts)
 	{
-		qntdd = (rand() % 41);
+		qntdd = (rand() % 3);
 		cout<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl<<endl;
 		while (qntdd > 0)
 		{
@@ -58,21 +58,16 @@ int main()
 			cia = companhias[(rand() % 32)];
 
 			tempo = (rand()%100);
-			if(tempo == 0)
-				zero++;
 
-			a = (double)rand()/((double)RAND_MAX+1);
+			aleat = (double)rand()/((double)RAND_MAX+1);
 			pouso = 0;
-			if(a < 0.5)
+			if(aleat < 0.5)
 				pouso = 1;	
 
-			a = (double)rand()/((double)RAND_MAX+1);
+			aleat = (double)rand()/((double)RAND_MAX+1);
 			emergencia = 0;
-			if(a <  0.2)
-			{	
+			if(aleat <  0.2)
 				emergencia = 1;
-				e++;
-			}
 
 			/*if(pouso)
 			{
@@ -97,83 +92,17 @@ int main()
 			Aviao *novo = new Aviao;
 			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, 0, pouso, emergencia);
 			p1.insere(novo);
-			
-			/*Inserir na fila de alguma pista*/
-
-
-			/*Análise e Tomada de decisão
-			* Vejo onde que o avião vai se encaixar e se é possível ele esperar na fila
-			*/
-			
-
-
-
-			/*Verificar quais pistas estão livres ou interditadas---> chamar pistaLivre()*/
-
-			/*Verificar se é pouso ou decolagem-----> if*/
-
-			/*Verificar se é emergência ou não------> if*/
-			/*Verificar se combustível está cheio---> if*/			
-	/*		if (emergencia)
-				/*Ver pista não interditada pistaLivre*/
-				/*pK.insereNoTopo(novo);*/
-
-			/*Aviao *a1 = p.topo();*/
-/*
-
-			if(pouso)
-			{
-				/*Decidindo em qual pista eu vou inseri*/
-				/*if(p1.tam < p2.tam)
-				{
-					if (novo.tempo < 3*p1.tam)
-						p1.insere(novo);
-					else
-						cout<<"Foi pra Viracopos"<<endl;
-				} else 
-				{
-					if (novo.tempo < 3*p2.tam)
-						p2.insere(novo);
-					else
-						cout<<"Foi pra Viracopos"<<endl;
-				}
-			} else 
-			{*/
-				/*Ver qual é o menor tempo de espera para as 3 pistas!! Aqui só tem 2*/
-/*				if(p1.tam < p2.tam && p1.tam < p3.tam)
-				{
-					if (novo.tempo < 3*p1.tam)
-						p1.insere(novo);
-					else
-						cout<<"Foi pra Viracopos"<<endl;
-				} else if (p2.tam < p1.tam && p2.tam < p3.tam) {
-					if (novo.tempo < 3*p2.tam)
-						p2.insere(novo);
-					else
-						cout<<"Foi pra Viracopos"<<endl;
-				}  else {
-					if (novo.tempo < 3*p2.tam)
-						p2.insere(novo);
-				}
-			}
-*/
-
-
-
 			qntdd--;
 		}
 
-		/*Aqui se realiza o pouso ou a decolagem*/
-
-
+		cout<<p1.tam+p2.tam+p3.tam<<" Aviões estão esperando para pousar e/ou decolar"<<endl;
+		cout<<"Tempo médio de espera para pouso: "<<count.tempo_esperaPouso(&p1, &p2, &p3, i)<<endl;
+		/*cout<<"Tempo médio de espera para decolagem: "<<count.tempo_esperaDecolagem(&p1, &p2, &p3, i)<<endl;
+		cout<<"Quantidade média de combustı́vel dos aviões esperando para pousar: "<<count.combustivel_esperaPouso(&p1, &p2, &p3, i)<<endl;
+		cout<<"Quantidade média de combustı́vel dos aviões que pousaram: "<<count.c_Pousado<<endl;
+		/*cout<<"Quantidade de aviões pousando/decolando em condições de emergência: "<<endl;*/
 		i++;
 	}
 
-	double p = ((double) e / (double) navioes) *100;
-	cout<<"n emergencias: "<<e<<"\n";
-	cout<<"Porcentagem de emergencias: "<<p<<"\n";
-	cout<<navioes<<" Aviões comunicaram a torre de comando"<<endl<<endl;
-
-
-
+	cout<<endl<<navioes<<" Aviões comunicaram a torre de comando"<<endl<<endl;
 }

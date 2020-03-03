@@ -39,7 +39,6 @@ void Fila::insere(Aviao* a)
 {
 	Celula *nova = new Celula(a);
 	tam++;
-	cout<<"tam: "<<tam<<endl<<endl;
 	fim->prox->ante = nova;
 	nova->prox = fim->prox;
 	fim->prox = nova;

@@ -3,6 +3,7 @@
 #include "Fila.h"
 #include "Contador.h"
 #include <iostream>
+using namespace std;
 
 Contador::Contador(){}
 Contador::~Contador(){}
@@ -21,13 +22,16 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 		int qntdd = 0;
 		while(c->prox != p->ini)
 		{
-			if(c->aeronave->pouso == i)
+			if(c->aeronave->pouso == 1)
 			{
 				qntdd++;
 				tEspera = (passoAtual - c->aeronave->passoContato) + tEspera;
 			}
+			c = c->prox;
 		}
-		media = qntdd/tEspera;
+		media = 0;
+		if (tEspera != 0)
+			media = (double)qntdd/((double)tEspera);
 	} else 
 	{
 		int litros = 0;
@@ -38,39 +42,42 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 				litros += c->aeronave->tempo;
 				tEspera = (passoAtual - c->aeronave->passoContato) + tEspera;
 			}
+			c = c->prox;
 		}
-		media = litros/tEspera;
+		media = 0;
+		if (tEspera != 0)
+			media = (double)litros/((double)tEspera);
 	}
 
 	return media;
 }
 /*tempo_esperaPouso(&fila1, &fila2, &fila3, ts);*/
-double Contador::tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
+double Contador::tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual) 
 {
 	double m1 = calculaMediaFila(p1, passoAtual, 1, 1);
 	double m2 = calculaMediaFila(p2, passoAtual, 1, 1);
 	double m3 = calculaMediaFila(p3, passoAtual, 1, 1);
 
-	return (m1+m2+m3)/3;
+	return (m1+m2+m3)/3.0;
 }
 double Contador::tempo_esperaDecolagem(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
 	double m1 = calculaMediaFila(p1, passoAtual, 1, 0);
 	double m2 = calculaMediaFila(p2, passoAtual, 1, 0);
 	double m3 = calculaMediaFila(p3, passoAtual, 1, 0);
-	return (m1+m2+m3)/3;
+	return (m1+m2+m3)/3.0;
 }
 double Contador::combustivel_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
 	double m1 = calculaMediaFila(p1, passoAtual, 0, 1);
 	double m2 = calculaMediaFila(p2, passoAtual, 0, 1);
 	double m3 = calculaMediaFila(p3, passoAtual, 0, 1);
-	return (m1+m2+m3)/3;
+	return (m1+m2+m3)/3.0;
 }
 double Contador::combustivel_Pousado(Aviao *a, int passoAtual)
 {
 	double m = (a->tempo/(passoAtual - a->passoContato));
-	c_Pousado = (c_Pousado + m)/2;
+	c_Pousado = (c_Pousado + m)/2.0;
 	return c_Pousado;
 
 }

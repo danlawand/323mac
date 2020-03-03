@@ -4,6 +4,92 @@
 #include "Aviao.h"
 #include "Fila.h"
 
+
+			
+			/*Inserir na fila de alguma pista*/
+
+
+			/*Análise e Tomada de decisão
+			* Vejo onde que o avião vai se encaixar e se é possível ele esperar na fila
+			*/
+			
+
+
+
+			/*Verificar quais pistas estão livres ou interditadas---> chamar pistaLivre()*/
+
+			/*Verificar se é pouso ou decolagem-----> if*/
+
+			/*Verificar se é emergência ou não------> if*/
+			/*Verificar se combustível está cheio---> if*/			
+	/*		if (emergencia)
+				/*Ver pista não interditada pistaLivre*/
+				/*pK.insereNoTopo(novo);*/
+
+			/*Aviao *a1 = p.topo();*/
+/*
+
+			if(pouso)
+			{
+				/*Decidindo em qual pista eu vou inseri*/
+				/*if(p1.tam < p2.tam)
+				{
+					if (novo.tempo < 3*p1.tam)
+						p1.insere(novo);
+					else
+						cout<<"Foi pra Viracopos"<<endl;
+				} else 
+				{
+					if (novo.tempo < 3*p2.tam)
+						p2.insere(novo);
+					else
+						cout<<"Foi pra Viracopos"<<endl;
+				}
+			} else 
+			{*/
+				/*Ver qual é o menor tempo de espera para as 3 pistas!! Aqui só tem 2*/
+/*				if(p1.tam < p2.tam && p1.tam < p3.tam)
+				{
+					if (novo.tempo < 3*p1.tam)
+						p1.insere(novo);
+					else
+						cout<<"Foi pra Viracopos"<<endl;
+				} else if (p2.tam < p1.tam && p2.tam < p3.tam) {
+					if (novo.tempo < 3*p2.tam)
+						p2.insere(novo);
+					else
+						cout<<"Foi pra Viracopos"<<endl;
+				}  else {
+					if (novo.tempo < 3*p2.tam)
+						p2.insere(novo);
+				}
+			}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 using namespace std;
 
 int main()

@@ -19,6 +19,9 @@ class Fila
 		Aviao* topo();
 		int tamanho();
 	  	bool filaVazia();
+	  	int esperaDecolagem();
+	  	int esperaPouso();
+
 	  	/*Será que faço uma função para pesquisar qual é
 	  	o que mais tem urgência?*/
 

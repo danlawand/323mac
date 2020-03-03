@@ -9,7 +9,7 @@ class Aviao
 		std::string aeroporto;
 		int numero_voo;
 		int tempo;
-		int passoContato
+		int passoContato;
 		int passoPermissao;
 		bool emergencia;
 		bool pouso;

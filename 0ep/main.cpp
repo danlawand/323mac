@@ -95,8 +95,8 @@ int main()
 				cout<<"Tempo Estimado da Viagem:\n"<<tempo<<"\n";
 			}*/
 			Aviao *novo = new Aviao;
-			novo->informacoes(cia, aeroporto, numero_voo, tempo, pouso, emergencia);
-		
+			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, 0, pouso, emergencia);
+			p1.insere(novo);
 			
 			/*Inserir na fila de alguma pista*/
 

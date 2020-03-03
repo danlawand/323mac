@@ -12,9 +12,9 @@ class Contador
 		~Contador();
 		double calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pouso);
 		double tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
-		double tempo_esperaDecolagem();
-		double combustivel_esperaPouso();
-		double combustivel_Pousado();
+		double tempo_esperaDecolagem(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
+		double combustivel_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
+		double combustivel_Pousado(Aviao *a, int passoAtual);
 };
 
 #endif

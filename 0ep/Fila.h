@@ -5,13 +5,12 @@
 
 class Fila
 {
-	private:
+	public:
 		int tam;
 		Aviao* a = new Aviao;
 		Aviao* b = new Aviao;
 		Celula* ini = new Celula(a);
 		Celula* fim = new Celula(b);
-	public:	
 		Fila();
 		~Fila();
 		void insere(Aviao*);
@@ -19,8 +18,6 @@ class Fila
 		Aviao* topo();
 		int tamanho();
 	  	bool filaVazia();
-	  	int esperaDecolagem();
-	  	int esperaPouso();
 
 	  	/*Será que faço uma função para pesquisar qual é
 	  	o que mais tem urgência?*/

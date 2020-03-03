@@ -66,42 +66,6 @@ Aviao* Fila::topo()
 	return a;
 }
 
-int Fila::combustivelPouso()
-{
-	int litros = 0;
-	Celula  *c;
-	c = ini->prox;
-	while(c->prox != ini)
-	{
-		if(c->aeronave->pouso == 1)
-			litros += c->aeronave->tempo;
-	}
-}
-
-int Fila::esperaPouso()
-{
-	int espera = 0;
-	Celula  *c;
-	c = ini->prox;
-	while(c->prox != ini)
-	{
-		if(c->aeronave->pouso == 1)
-			espera++;
-	}
-}
-
-int Fila::esperaDecolagem()
-{
-	int espera = 0;
-	Celula  *c;
-	c = ini->prox;
-	while(c->prox != ini)
-	{
-		if(c->aeronave->pouso == 0)
-			espera++;
-	}
-}
-
 int Fila::tamanho()
 {
 	return tam;

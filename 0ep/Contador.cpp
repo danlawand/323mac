@@ -19,7 +19,7 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 	if (espera)
 	{
 		int qntdd = 0;
-		while(c->prox != ini)
+		while(c->prox != p->ini)
 		{
 			if(c->aeronave->pouso == i)
 			{
@@ -31,7 +31,7 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 	} else 
 	{
 		int litros = 0;
-		while(c->prox != ini)
+		while(c->prox != p->ini)
 		{
 			if(c->aeronave->pouso == i)
 			{
@@ -47,24 +47,24 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 /*tempo_esperaPouso(&fila1, &fila2, &fila3, ts);*/
 double Contador::tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
-	double m1 = calculaMediaFila(Fila *p1, passoAtual, 1, 1);
-	double m2 = calculaMediaFila(Fila *p2, passoAtual, 1, 1);
-	double m3 = calculaMediaFila(Fila *p3, passoAtual, 1, 1);
+	double m1 = calculaMediaFila(p1, passoAtual, 1, 1);
+	double m2 = calculaMediaFila(p2, passoAtual, 1, 1);
+	double m3 = calculaMediaFila(p3, passoAtual, 1, 1);
 
 	return (m1+m2+m3)/3;
 }
 double Contador::tempo_esperaDecolagem(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
-	double m1 = calculaMediaFila(Fila *p1, passoAtual, 1, 0);
-	double m2 = calculaMediaFila(Fila *p2, passoAtual, 1, 0);
-	double m3 = calculaMediaFila(Fila *p3, passoAtual, 1, 0);
+	double m1 = calculaMediaFila(p1, passoAtual, 1, 0);
+	double m2 = calculaMediaFila(p2, passoAtual, 1, 0);
+	double m3 = calculaMediaFila(p3, passoAtual, 1, 0);
 	return (m1+m2+m3)/3;
 }
 double Contador::combustivel_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
-	double m1 = calculaMediaFila(Fila *p1, passoAtual, 0, 1);
-	double m2 = calculaMediaFila(Fila *p2, passoAtual, 0, 1);
-	double m3 = calculaMediaFila(Fila *p3, passoAtual, 0, 1);
+	double m1 = calculaMediaFila(p1, passoAtual, 0, 1);
+	double m2 = calculaMediaFila(p2, passoAtual, 0, 1);
+	double m3 = calculaMediaFila(p3, passoAtual, 0, 1);
 	return (m1+m2+m3)/3;
 }
 double Contador::combustivel_Pousado(Aviao *a, int passoAtual)

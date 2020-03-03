@@ -13,10 +13,11 @@ class Contador
 		int c_Pousado;
 		Contador();
 		~Contador();
-		int tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
-		int tempo_esperaDecolagem();
-		int combustivel_esperaPouso();
-		int combustivel_Pousado();
+		double calculaMediaFila(Fila p, int passoAtual, bool espera);
+		double tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
+		double tempo_esperaDecolagem();
+		double combustivel_esperaPouso();
+		double combustivel_Pousado();
 };
 
 #endif

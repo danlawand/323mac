@@ -4,6 +4,7 @@
 #include "Aviao.h"
 #include "Fila.h"
 #include "Categoria.h"
+#include "Contador.h"
 
 using namespace std;
 

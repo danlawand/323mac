@@ -7,16 +7,16 @@
 class Contador
 {
 	public:
-		int tempo_esperaPouso;
-		int tempo_esperaDecolagem;
-		int combustivel_esperaPouso;
-		int combustivel_Pousado;
+		int t_esperaPouso;
+		int t_esperaDecolagem;
+		int c_esperaPouso;
+		int c_Pousado;
 		Contador();
 		~Contador();
-		int tempo_esperaPouso;
-		int tempo_esperaDecolagem;
-		int combustivel_esperaPouso;
-		int combustivel_Pousado;
+		int tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
+		int tempo_esperaDecolagem();
+		int combustivel_esperaPouso();
+		int combustivel_Pousado();
 };
 
 #endif

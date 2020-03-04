@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-Contador::Contador(){}
+Contador::Contador(){c_Pousado = 0;}
 Contador::~Contador(){}
 
 double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pouso)
@@ -73,11 +73,4 @@ double Contador::combustivel_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passo
 	double m2 = calculaMediaFila(p2, passoAtual, 0, 1);
 	double m3 = calculaMediaFila(p3, passoAtual, 0, 1);
 	return (m1+m2+m3)/3.0;
-}
-double Contador::combustivel_Pousado(Aviao *a, int passoAtual)
-{
-	double m = (a->tempo/(passoAtual - a->passoContato));
-	c_Pousado = (c_Pousado + m)/2.0;
-	return c_Pousado;
-
 }

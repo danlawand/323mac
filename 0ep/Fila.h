@@ -7,13 +7,15 @@ class Fila
 {
 	public:
 		int tam;
+		int passoPermissao;
 		Aviao* a = new Aviao;
 		Aviao* b = new Aviao;
 		Celula* ini = new Celula(a);
 		Celula* fim = new Celula(b);
 		Fila();
 		~Fila();
-		void insere(Aviao*);
+		void insereFim(Aviao*);
+		void insereTopo(Aviao*);
 		Aviao* remove();
 		Aviao* topo();
 		int tamanho();

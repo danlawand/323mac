@@ -8,6 +8,136 @@
 
 using namespace std;
 
+void verificandoCombustivel(Fila *p1, Fila *p2, Fila *p3)
+{
+
+}
+
+/*Função de entrar na fila*/
+void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
+{
+	if (a->e)
+	{
+		if(p1.tam < p2.tam && p1.tam < p3.tam)
+			p1.insereTopo(a);
+		else if (p2.tam < p1.tam && p2.tam < p3.tam)
+			p2.insereTopo(a);
+		else
+			p3.insereTopo(a);		
+	} else if (a->pouso)
+	{
+		if(p1.tam < p2.tam)
+		{
+			if (a.tempo > 3*p1.tam)
+				p1.insereFim(a);
+			else
+				cout<<"Foi pra Viracopos"<<endl; 
+				delete a;
+		} else 
+		{
+			if (a.tempo > 3*p2.tam)
+				p2.insereFim(a);
+			else
+				cout<<"Foi pra Viracopos"<<endl;
+				delete a;
+		}
+	} else 
+	{
+		if(p1.tam < p2.tam && p1.tam < p3.tam)
+		{
+			if (a.tempo > 3*p1.tam)
+			{
+				p1.insereFim(a);
+			} else
+			{
+				cout<<"Foi pra Viracopos"<<endl;
+				delete a;
+			}
+		} else if (p2.tam < p1.tam && p2.tam < p3.tam) {
+			if (a.tempo > 3*p2.tam)
+			{
+				p2.insereFim(a);
+			} else
+			{
+				cout<<"Foi pra Viracopos"<<endl;
+				delete a;
+			}
+		} else {
+			if (a.tempo > 3*p3.tam)
+			{
+				p3.insereFim(a);
+			} else
+			{
+				cout<<"Foi pra Viracopos"<<endl;
+				delete a;
+			}
+		}
+	}
+}
+
+/*Função de Pouso ou Decolagem  ---  INCOMPLETA*/
+double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
+{
+	int avioes = 0;
+	int tcombustivel = 0;
+	Aviao *a;
+	/*Operando a Pista p1*/
+	if (p1.passoPermissao > 2)
+	{
+		if(p1.filaVazia())
+			break;
+		else 
+			/*Pouso ou Decolagem*/
+			p1.passoPermissao = 0;
+			a = p1.remove();
+			if (a->pouso)
+			{
+				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+				avioes++;
+			}
+			delete a;
+	}
+
+	/*Operando a Pista p2*/
+	if (p2.passoPermissao > 2)
+	{
+		if(p2.filaVazia())
+			break;
+		else 
+			/*Pouso ou Decolagem*/
+			p2.passoPermissao = 0;
+			a = p2.remove();
+			if (a->pouso)
+			{
+				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+				avioes++;
+			}
+			delete a;
+	}
+
+	/*Operando a Pista p3*/
+	if (p3.passoPermissao > 2)
+	{
+		if(p3.filaVazia())
+			break;
+		else 
+			/*Pouso ou Decolagem*/
+			p3.passoPermissao = 0;
+			a = p3.remove();
+			if (a->pouso)
+			{
+				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+				avioes++;
+			}
+			delete a;
+	}
+	if(avioes == 0)
+		return 0;
+	double media = (double) tcombustivel/((double)avioes);
+	return media;
+}
+
+
 int main()
 {
 	int ts;
@@ -36,14 +166,14 @@ int main()
 	srand(7);
 	
 
-	/* Considero cada passo de tempo de simulação seja equivalente a uma hora na vida real
+	/* Considero cada passo de tempo de simulação seja equivalente a 6 minutos na vida real 
 	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
-	*  1000 aviões / 24 horas =~ 41 aviões/hora
+	*  1000 aviões / 24 Horas =~ 41 aviões/Hora ==> 4 aviões/passo
  	*/
 
 	while(i < ts)
 	{
-		qntdd = (rand() % 3);
+		qntdd = (rand() % 4);
 		cout<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl<<endl;
 		while (qntdd > 0)
 		{
@@ -90,8 +220,21 @@ int main()
 				cout<<"Tempo Estimado da Viagem:\n"<<tempo<<"\n";
 			}*/
 			Aviao *novo = new Aviao;
-			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, 0, pouso, emergencia);
-			p1.insere(novo);
+			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, pouso, emergencia);
+			
+			/*Função que verifica se alguém está ficando sem combustível e aí se remove o sujeito*/
+
+			/*Função de entrar na fila*/
+			escolhendoPista(&p1, &p2, &p3, novo);
+
+			p1.passoPermissao++;
+			p2.passoPermissao++;
+			p3.passoPermissao++;
+			/*Função de Pouso ou Decolagem*/
+			count.c_Pousado = (usoPista(&p1, &p2, &p3, i) + count.c_Pousado)/2;
+			
+
+
 			qntdd--;
 		}
 

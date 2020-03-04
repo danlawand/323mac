@@ -8,10 +8,9 @@ using namespace std;
 Fila::Fila()
 {
 	tam = 0;
+	passoPermissao = 3;
 	ini->prox = fim;
-	ini->ante = fim;
 	fim->prox = ini;
-	fim->ante = ini;
 }
 /*Destrutor*/
 Fila::~Fila()
@@ -22,7 +21,6 @@ Fila::~Fila()
 	{
 		c = ini->prox;
 		ini->prox = c->prox;
-		c->prox->ante = ini;
 		delete c;
 	}
 	delete ini;
@@ -32,17 +30,22 @@ Fila::~Fila()
 /* <---<----<---<------
 * INI 1 2 3 4 5 6 7 FIM
 * FIM->PROX = 7;
-* 7->ANTE = FIM;
 * 7->PROX = 6;
 */
-void Fila::insere(Aviao* a)
+void Fila::insereFim(Aviao* a)
 {
 	Celula *nova = new Celula(a);
 	tam++;
-	fim->prox->ante = nova;
 	nova->prox = fim->prox;
 	fim->prox = nova;
-	nova->ante = fim;
+}
+
+void Fila::insereTopo(Aviao* a)
+{
+	Celula *nova = new Celula(a);
+	tam++;
+	nova->prox = ini->prox;
+	ini->prox = nova;
 }
 
 Aviao* Fila::remove()
@@ -52,7 +55,6 @@ Aviao* Fila::remove()
 	a = ini->prox->aeronave;
 	c = ini->prox;
 	ini->prox = c->prox;
-	c->prox->ante = ini;
 	delete c;
 	tam--;
 	return a;

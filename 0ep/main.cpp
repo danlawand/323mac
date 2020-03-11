@@ -19,27 +19,42 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 	if (a->emergencia)
 	{
 		if(p1->tam < p2->tam && p1->tam < p3->tam)
+		{
 			p1->insereTopo(a);
-		else if (p2->tam < p1->tam && p2->tam < p3->tam)
+			cout<<"Avião entrando na pista 1"<<endl;
+		} else if (p2->tam < p1->tam && p2->tam < p3->tam)
+		{
 			p2->insereTopo(a);
-		else
-			p3->insereTopo(a);		
+			cout<<"Avião entrando na pista 2"<<endl;
+		} else
+		{
+			p3->insereTopo(a);	
+			cout<<"Avião entrando na pista 3"<<endl;	
+		}
 	} else if (a->pouso)
 	{
 		if(p1->tam < p2->tam)
 		{
 			if (a->tempo > 3*p1->tam)
+			{
 				p1->insereFim(a);
-			else
+				cout<<"Avião entrando na pista 1"<<endl;
+			} else
+			{
 				cout<<"Foi pra Viracopos"<<endl; 
 				delete a;
+			}
 		} else 
 		{
 			if (a->tempo > 3*p2->tam)
+			{
 				p2->insereFim(a);
-			else
+				cout<<"Avião entrando na pista 2"<<endl;
+			} else
+			{
 				cout<<"Foi pra Viracopos"<<endl;
 				delete a;
+			}
 		}
 	} else 
 	{
@@ -48,6 +63,7 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 			if (a->tempo > 3*p1->tam)
 			{
 				p1->insereFim(a);
+				cout<<"Avião entrando na pista 1"<<endl;
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
@@ -57,6 +73,7 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 			if (a->tempo > 3*p2->tam)
 			{
 				p2->insereFim(a);
+				cout<<"Avião entrando na pista 2"<<endl;
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
@@ -66,6 +83,7 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 			if (a->tempo > 3*p3->tam)
 			{
 				p3->insereFim(a);
+				cout<<"Avião entrando na pista 3"<<endl;
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;

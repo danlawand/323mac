@@ -16,56 +16,56 @@ void verificandoCombustivel(Fila *p1, Fila *p2, Fila *p3)
 /*Função de entrar na fila*/
 void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 {
-	if (a->e)
+	if (a->emergencia)
 	{
-		if(p1.tam < p2.tam && p1.tam < p3.tam)
-			p1.insereTopo(a);
-		else if (p2.tam < p1.tam && p2.tam < p3.tam)
-			p2.insereTopo(a);
+		if(p1->tam < p2->tam && p1->tam < p3->tam)
+			p1->insereTopo(a);
+		else if (p2->tam < p1->tam && p2->tam < p3->tam)
+			p2->insereTopo(a);
 		else
-			p3.insereTopo(a);		
+			p3->insereTopo(a);		
 	} else if (a->pouso)
 	{
-		if(p1.tam < p2.tam)
+		if(p1->tam < p2->tam)
 		{
-			if (a.tempo > 3*p1.tam)
-				p1.insereFim(a);
+			if (a->tempo > 3*p1->tam)
+				p1->insereFim(a);
 			else
 				cout<<"Foi pra Viracopos"<<endl; 
 				delete a;
 		} else 
 		{
-			if (a.tempo > 3*p2.tam)
-				p2.insereFim(a);
+			if (a->tempo > 3*p2->tam)
+				p2->insereFim(a);
 			else
 				cout<<"Foi pra Viracopos"<<endl;
 				delete a;
 		}
 	} else 
 	{
-		if(p1.tam < p2.tam && p1.tam < p3.tam)
+		if(p1->tam < p2->tam && p1->tam < p3->tam)
 		{
-			if (a.tempo > 3*p1.tam)
+			if (a->tempo > 3*p1->tam)
 			{
-				p1.insereFim(a);
+				p1->insereFim(a);
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
 				delete a;
 			}
-		} else if (p2.tam < p1.tam && p2.tam < p3.tam) {
-			if (a.tempo > 3*p2.tam)
+		} else if (p2->tam < p1->tam && p2->tam < p3->tam) {
+			if (a->tempo > 3*p2->tam)
 			{
-				p2.insereFim(a);
+				p2->insereFim(a);
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
 				delete a;
 			}
 		} else {
-			if (a.tempo > 3*p3.tam)
+			if (a->tempo > 3*p3->tam)
 			{
-				p3.insereFim(a);
+				p3->insereFim(a);
 			} else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
@@ -82,54 +82,45 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 	int tcombustivel = 0;
 	Aviao *a;
 	/*Operando a Pista p1*/
-	if (p1.passoPermissao > 2)
+	if (p1->passoPermissao > 2 && !p1->filaVazia())
 	{
-		if(p1.filaVazia())
-			break;
-		else 
-			/*Pouso ou Decolagem*/
-			p1.passoPermissao = 0;
-			a = p1.remove();
-			if (a->pouso)
-			{
-				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
-				avioes++;
-			}
-			delete a;
+		/*Pouso ou Decolagem*/
+		p1->passoPermissao = 0;
+		a = p1->remove();
+		if (a->pouso)
+		{
+			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			avioes++;
+		}
+		delete a;
 	}
 
 	/*Operando a Pista p2*/
-	if (p2.passoPermissao > 2)
+	if (p2->passoPermissao > 2 && !p2->filaVazia())
 	{
-		if(p2.filaVazia())
-			break;
-		else 
-			/*Pouso ou Decolagem*/
-			p2.passoPermissao = 0;
-			a = p2.remove();
-			if (a->pouso)
-			{
-				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
-				avioes++;
-			}
-			delete a;
+		/*Pouso ou Decolagem*/
+		p2->passoPermissao = 0;
+		a = p2->remove();
+		if (a->pouso)
+		{
+			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			avioes++;
+		}
+		delete a;
 	}
 
 	/*Operando a Pista p3*/
-	if (p3.passoPermissao > 2)
+	if (p3->passoPermissao > 2 && !p3->filaVazia())
 	{
-		if(p3.filaVazia())
-			break;
-		else 
-			/*Pouso ou Decolagem*/
-			p3.passoPermissao = 0;
-			a = p3.remove();
-			if (a->pouso)
-			{
-				tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
-				avioes++;
-			}
-			delete a;
+		/*Pouso ou Decolagem*/
+		p3->passoPermissao = 0;
+		a = p3->remove();
+		if (a->pouso)
+		{
+			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			avioes++;
+		}
+		delete a;
 	}
 	if(avioes == 0)
 		return 0;
@@ -174,7 +165,7 @@ int main()
 	while(i < ts)
 	{
 		qntdd = (rand() % 4);
-		cout<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl<<endl;
+		cout<<endl<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl<<endl;
 		while (qntdd > 0)
 		{
 			/*Contador da quantidade de aeronaves por dia*/

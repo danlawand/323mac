@@ -3,6 +3,7 @@
 #include <ctime>
 #include "Aviao.h"
 #include "Fila.h"
+#include "Celula.h"
 #include "Categoria.h"
 #include "Contador.h"
 
@@ -13,44 +14,68 @@ void verificandoCombustivel(Fila *p1, Fila *p2, Fila *p3)
 
 }
 
-/*Função de entrar na fila*/
+/*Função de entrar na fila --  INCOMPLETA*/
 void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 {
+	/*EMERGÊNCIA DONE*/
+	/*Para Vôos de emergência, vamos analisar qual passoPermissão é menor*/
 	if (a->emergencia)
 	{
-		if(p1->tam < p2->tam && p1->tam < p3->tam)
-		{
+		if(p3->passoPermissao < p2->passoPermissao && p3->passoPermissao < p1->passoPermissao)
+			p3->insereTopo(a);
+		else if (p1->passoPermissao < p2->passoPermissao && p1->passoPermissao < p3->passoPermissao)
 			p1->insereTopo(a);
-			cout<<"Avião entrando na pista 1"<<endl;
-		} else if (p2->tam < p1->tam && p2->tam < p3->tam)
-		{
+		else if (p2->passoPermissao < p3->passoPermissao && p2->passoPermissao < p1->passoPermissao)
 			p2->insereTopo(a);
-			cout<<"Avião entrando na pista 2"<<endl;
-		} else
-		{
-			p3->insereTopo(a);	
-			cout<<"Avião entrando na pista 3"<<endl;	
-		}
+		else if ((p1->passoPermissao == p2->passoPermissao) && p1->passoPermissao < p3->passoPermissao)
+			if (p1->tam < p2->tam)
+				p1->insereTopo(a);
+			else
+				p2->insereTopo(a);
+		else if ((p1->passoPermissao == p2->passoPermissao) && p1->passoPermissao > p3->passoPermissao)
+			p3->insereTopo(a);
+		else if ((p1->passoPermissao == p3->passoPermissao) && p1->passoPermissao < p2->passoPermissao)
+			if (p1->tam < p3->tam)
+				p1->insereTopo(a);
+			else
+				p3->insereTopo(a);
+		else if ((p1->passoPermissao == p3->passoPermissao) && p1->passoPermissao > p2->passoPermissao)
+			p2->insereTopo(a);
+
+		else if ((p2->passoPermissao == p3->passoPermissao) && p2->passoPermissao < p1->passoPermissao)
+			if (p2->tam < p3->tam)
+				p2->insereTopo(a);
+			else
+				p3->insereTopo(a);
+		else /* if ((p2->passoPermissao == p3->passoPermissao) && p2->passoPermissao > p1->passoPermissao)*/
+			p1->insereTopo(a);
+
 	} else if (a->pouso)
 	{
-		if(p1->tam < p2->tam)
+		/*POUSO DONE*/
+		if(3*(p1->tam) + p1->passoPermissao < 3*(p2->tam) + p2->passoPermissao)
 		{
-			if (a->tempo > 3*p1->tam)
-			{
+			if (a->tempo > 3*p1->tam + p1->passoPermissao)
 				p1->insereFim(a);
-				cout<<"Avião entrando na pista 1"<<endl;
-			} else
+			else
 			{
 				cout<<"Foi pra Viracopos"<<endl; 
 				delete a;
 			}
-		} else 
+		} else if (3*(p2->tam) + p2->passoPermissao < 3*(p1->tam) + p1->passoPermissao)
 		{
-			if (a->tempo > 3*p2->tam)
-			{
+			if (a->tempo > 3*p2->tam + p2->passoPermissao)
 				p2->insereFim(a);
-				cout<<"Avião entrando na pista 2"<<endl;
-			} else
+			else
+			{
+				cout<<"Foi pra Viracopos"<<endl;
+				delete a;
+			}
+		} else
+		{
+			if (a->tempo > 3*p1->tam + p1->passoPermissao)
+				p1->insereFim(a);
+			else
 			{
 				cout<<"Foi pra Viracopos"<<endl;
 				delete a;
@@ -58,52 +83,71 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 		}
 	} else 
 	{
-		if(p1->tam < p2->tam && p1->tam < p3->tam)
-		{
-			if (a->tempo > 3*p1->tam)
-			{
-				p1->insereFim(a);
-				cout<<"Avião entrando na pista 1"<<endl;
-			} else
-			{
-				cout<<"Foi pra Viracopos"<<endl;
-				delete a;
-			}
-		} else if (p2->tam < p1->tam && p2->tam < p3->tam) {
-			if (a->tempo > 3*p2->tam)
-			{
+		/*DECOLAGEM*/
+		/*FALTA ANALISAR A QUESTÃO DE 10% DO TEMPO DE VIAGEM EM RELAÇÃO AO TEMPO DE ESPERA*/
+		if(3*p3->tam + p3->passoPermissao < 3*p2->tam + p2->passoPermissao && 3*p3->tam + p3->passoPermissao < 3*p1->tam + p1->passoPermissao)
+			p3->insereFim(a);
+
+		else if (3*p1->tam + p1->passoPermissao < 3*p2->tam + p2->passoPermissao && 3*p1->tam + p1->passoPermissao < 3*p3->tam + p3->passoPermissao)
+
+			p1->insereFim(a);
+
+		else if (3*p2->tam + p2->passoPermissao < 3*p3->tam + p3->passoPermissao && 3*p2->tam + p2->passoPermissao < 3*p1->tam + p1->passoPermissao)
+
 				p2->insereFim(a);
-				cout<<"Avião entrando na pista 2"<<endl;
-			} else
-			{
-				cout<<"Foi pra Viracopos"<<endl;
-				delete a;
-			}
-		} else {
-			if (a->tempo > 3*p3->tam)
-			{
-				p3->insereFim(a);
-				cout<<"Avião entrando na pista 3"<<endl;
-			} else
-			{
-				cout<<"Foi pra Viracopos"<<endl;
-				delete a;
-			}
-		}
-	}
+
+		else if ((3*p1->tam + p1->passoPermissao == 3*p2->tam + p2->passoPermissao) && 3*p1->tam + p1->passoPermissao < 3*p3->tam + p3->passoPermissao)
+			if (3*p1->tam + p1->passoPermissao < 3*p2->tam + p2->passoPermissao)
+					p1->insereFim(a);
+			else
+					p2->insereFim(a);
+
+		
+		else if ((3*p1->tam + p1->passoPermissao == 3*p2->tam + p2->passoPermissao) && 3*p1->tam + p1->passoPermissao > 3*p3->tam + p3->passoPermissao)
+					p3->insereFim(a);
+
+		else if ((3*p1->tam + p1->passoPermissao == 3*p3->tam + p3->passoPermissao) && 3*p1->tam + p1->passoPermissao < 3*p2->tam + p2->passoPermissao)
+			if (3*p1->tam + p1->passoPermissao < 3*p3->tam + p3->passoPermissao)
+
+					p1->insereFim(a);
+
+			else
+					p3->insereFim(a);
+
+		
+		else if ((3*p1->tam + p1->passoPermissao == 3*p3->tam + p3->passoPermissao) && 3*p1->tam + p1->passoPermissao > 3*p2->tam + p2->passoPermissao)
+
+				p2->insereFim(a);
+
+
+		else if ((3*p2->tam + p2->passoPermissao == 3*p3->tam + p3->passoPermissao) && 3*p2->tam + p2->passoPermissao < 3*p1->tam + p1->passoPermissao)
+			if (3*p2->tam + p2->passoPermissao < 3*p3->tam + p3->passoPermissao)
+
+					p2->insereFim(a);
+
+			else
+
+					p3->insereFim(a);
+
+		else /*if ((3*p2->tam + p2->passoPermissao == 3*p3->tam + p3->passoPermissao) && 3*p2->tam + p2->passoPermissao > 3*p1->tam + p1->passoPermissao)*/
+
+				p2->insereFim(a);
+		
+	}	
 }
 
-/*Função de Pouso ou Decolagem  ---  INCOMPLETA*/
+/*Função para Pouso e Decolagem, mais contador de combustível dos que já pousaram*/
 double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
 	int avioes = 0;
 	int tcombustivel = 0;
 	Aviao *a;
+
 	/*Operando a Pista p1*/
-	if (p1->passoPermissao > 2 && !p1->filaVazia())
+	if (!p1->filaVazia() && p1->passoPermissao == 0)
 	{
 		/*Pouso ou Decolagem*/
-		p1->passoPermissao = 0;
+		p1->passoPermissao = 2;
 		a = p1->remove();
 		if (a->pouso)
 		{
@@ -112,12 +156,11 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 		}
 		delete a;
 	}
-
 	/*Operando a Pista p2*/
-	if (p2->passoPermissao > 2 && !p2->filaVazia())
+	if (!p2->filaVazia() && p2->passoPermissao == 0)
 	{
 		/*Pouso ou Decolagem*/
-		p2->passoPermissao = 0;
+		p2->passoPermissao = 2;
 		a = p2->remove();
 		if (a->pouso)
 		{
@@ -128,10 +171,10 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 	}
 
 	/*Operando a Pista p3*/
-	if (p3->passoPermissao > 2 && !p3->filaVazia())
+	if (!p3->filaVazia() && p3->passoPermissao == 0)
 	{
 		/*Pouso ou Decolagem*/
-		p3->passoPermissao = 0;
+		p3->passoPermissao = 2;
 		a = p3->remove();
 		if (a->pouso)
 		{
@@ -150,9 +193,9 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 int main()
 {
 	int ts;
-	cout<<"Aeroporto Internacional GRU\n";
+/*	cout<<"Aeroporto Internacional GRU\n";
 	cout<<"________________________________\n\n";
-	cout<<"Digite o tempo de simulação:";
+	cout<<"Digite o tempo de simulação:";*/
 	cin>>ts;
 	cout<<"\n\n";
 
@@ -183,7 +226,7 @@ int main()
 	while(i < ts)
 	{
 		qntdd = (rand() % 4);
-		cout<<endl<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl<<endl;
+		cout<<endl<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl;
 		while (qntdd > 0)
 		{
 			/*Contador da quantidade de aeronaves por dia*/
@@ -208,52 +251,73 @@ int main()
 			if(aleat <  0.2)
 				emergencia = 1;
 
-			/*if(pouso)
+			if(pouso)
 			{
-				cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
+				//cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
 				if (emergencia)
 					cout<<"Voo de emergencia:\n"<<emergencia<<"\n";
-				cout<<"Solicitando permissão para POUSAR"<<endl;
-				cout<<"Sigla da Companhia aérea:\n"<<cia<<"\n";
-				cout<<"Numero do Vôo:\n"<<numero_voo<<"\n";
-				cout<<"Sigla do Aeroporto de Origem:\n"<<aeroporto<<"\n";
-				cout<<"Tempo de Combustível:\n"<<tempo<<"\n";
+				cout<<"POUSO"<<endl;
+				//cout<<"Solicitando permissão para POUSAR"<<endl;
+				//cout<<"Sigla da Companhia aérea:\n"<<cia<<"\n";
+				//cout<<"Numero do Vôo:\n"<<numero_voo<<"\n";
+				//cout<<"Sigla do Aeroporto de Origem:\n"<<aeroporto<<"\n";
+				//cout<<"Tempo de Combustível:\n"<<tempo<<"\n";
 			} else {
-				cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
+				//cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
 				if (emergencia)
 					cout<<"Voo de emergencia:\n"<<emergencia<<"\n";
-				cout<<"Solicitando permissão para DECOLAR"<<endl;
-				cout<<"Sigla da Companhia aérea:\n"<<cia<<"\n";
-				cout<<"Numero do Vôo:\n"<<numero_voo<<"\n";
-				cout<<"Sigla do Aeroporto de Destino:\n"<<aeroporto<<"\n";
-				cout<<"Tempo Estimado da Viagem:\n"<<tempo<<"\n";
-			}*/
+				cout<<"DECOLAR"<<endl;
+				//cout<<"Solicitando permissão para DECOLAR"<<endl;
+				//cout<<"Sigla da Companhia aérea:\n"<<cia<<"\n";
+				//cout<<"Numero do Vôo:\n"<<numero_voo<<"\n";
+				//cout<<"Sigla do Aeroporto de Destino:\n"<<aeroporto<<"\n";
+				//cout<<"Tempo Estimado da Viagem:\n"<<tempo<<"\n";
+			}
+
 			Aviao *novo = new Aviao;
 			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, pouso, emergencia);
 			
 			/*Função que verifica se alguém está ficando sem combustível e aí se remove o sujeito*/
 
 			/*Função de entrar na fila*/
+			cout<<endl<<"Antes de escolhendoPista"<<endl;
+			cout<<"Tam p1: "<<p1.tam<<endl;
+			cout<<"Tam p2: "<<p2.tam<<endl;
+			cout<<"Tam p3: "<<p3.tam<<endl;
 			escolhendoPista(&p1, &p2, &p3, novo);
-
-			p1.passoPermissao++;
-			p2.passoPermissao++;
-			p3.passoPermissao++;
-			/*Função de Pouso ou Decolagem*/
-			count.c_Pousado = (usoPista(&p1, &p2, &p3, i) + count.c_Pousado)/2;
-			
-
+			cout<<endl<<"depois de escolhendoPista"<<endl;
+			cout<<"Tam p1: "<<p1.tam<<endl;
+			cout<<"Tam p2: "<<p2.tam<<endl;
+			cout<<"Tam p3: "<<p3.tam<<endl<<endl<<endl;
 
 			qntdd--;
 		}
 
-		cout<<p1.tam+p2.tam+p3.tam<<" Aviões estão esperando para pousar e/ou decolar"<<endl;
+		if (p1.passoPermissao > 0)
+			p1.passoPermissao--;
+		if (p2.passoPermissao > 0)
+			p2.passoPermissao--;
+		if (p3.passoPermissao > 0)
+			p3.passoPermissao--;
+
+		/*Função de Pouso ou Decolagem*/
+		count.c_Pousado = (usoPista(&p1, &p2, &p3, i) + count.c_Pousado)/2;
+
+		cout<<"depois do usoPista"<<endl;
+		cout<<"Tam p1: "<<p1.tam<<endl;
+		cout<<"Tam p2: "<<p2.tam<<endl;
+		cout<<"Tam p3: "<<p3.tam<<endl;
+
+/*		cout<<endl<<p1.tam+p2.tam+p3.tam<<" Aviões estão esperando para pousar e/ou decolar"<<endl;
 		cout<<"Tempo médio de espera para pouso: "<<count.tempo_esperaPouso(&p1, &p2, &p3, i)<<endl;
 		/*cout<<"Tempo médio de espera para decolagem: "<<count.tempo_esperaDecolagem(&p1, &p2, &p3, i)<<endl;
 		cout<<"Quantidade média de combustı́vel dos aviões esperando para pousar: "<<count.combustivel_esperaPouso(&p1, &p2, &p3, i)<<endl;
 		cout<<"Quantidade média de combustı́vel dos aviões que pousaram: "<<count.c_Pousado<<endl;
 		/*cout<<"Quantidade de aviões pousando/decolando em condições de emergência: "<<endl;*/
 		i++;
+		cout <<endl <<"Pressione qualquer tecla para continuar..." << endl;
+		getchar();
+		cout<<endl<<"___________________________________________________________________"<<endl;
 	}
 
 	cout<<endl<<navioes<<" Aviões comunicaram a torre de comando"<<endl<<endl;

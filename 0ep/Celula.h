@@ -7,6 +7,7 @@ class Celula
 	public:
 		Aviao* aeronave;
 		Celula* prox;
+		Celula* ante;
 		Celula(Aviao *a);
 		~Celula();
 };

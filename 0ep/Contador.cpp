@@ -8,20 +8,20 @@ using namespace std;
 Contador::Contador(){c_Pousado = 0;}
 Contador::~Contador(){}
 
-double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pouso)
+double Contador::calculaMediaFila(Fila *p, int passoAtual, bool mediaDeTempo, bool pouso)
 {
+
 	double media = 0;
 	int tEspera = 0;
 	Celula  *c;
-	c = p->ini->prox;
-	int i = 0;
-	if (pouso)
-		i = 1;
-	if (espera)
+	c = p->fim->prox;
+	
+	if (mediaDeTempo)
 	{
 		int qntdd = 0;
-		while(c->prox != p->ini)
+		while(c != p->ini)
 		{
+
 			if(c->aeronave->pouso == 1)
 			{
 				qntdd++;
@@ -31,13 +31,13 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 		}
 		media = 0;
 		if (tEspera != 0)
-			media = (double)qntdd/((double)tEspera);
+			media = ((double)tEspera)/((double)qntdd);
 	} else 
 	{
 		int litros = 0;
-		while(c->prox != p->ini)
+		while(c != p->ini)
 		{
-			if(c->aeronave->pouso == i)
+			if(c->aeronave->pouso == pouso)
 			{
 				litros += c->aeronave->tempo;
 				tEspera = (passoAtual - c->aeronave->passoContato) + tEspera;
@@ -46,7 +46,7 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 		}
 		media = 0;
 		if (tEspera != 0)
-			media = (double)litros/((double)tEspera);
+			media = ((double)tEspera)/((double)litros);
 	}
 
 	return media;
@@ -54,6 +54,7 @@ double Contador::calculaMediaFila(Fila *p, int passoAtual, bool espera, bool pou
 /*tempo_esperaPouso(&fila1, &fila2, &fila3, ts);*/
 double Contador::tempo_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual) 
 {
+	
 	double m1 = calculaMediaFila(p1, passoAtual, 1, 1);
 	double m2 = calculaMediaFila(p2, passoAtual, 1, 1);
 	double m3 = calculaMediaFila(p3, passoAtual, 1, 1);

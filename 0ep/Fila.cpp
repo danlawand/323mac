@@ -8,8 +8,10 @@ using namespace std;
 Fila::Fila()
 {
 	tam = 0;
-	passoPermissao = 3;
-	ini->prox = fim;
+	passoPermissao = 0;
+	ini->ante = fim;
+	ini->prox = nullptr;
+	fim->ante = nullptr;
 	fim->prox = ini;
 }
 /*Destrutor*/
@@ -19,8 +21,9 @@ Fila::~Fila()
 	Celula *c;
 	while(!filaVazia())
 	{
-		c = ini->prox;
-		ini->prox = c->prox;
+		c = ini->ante;
+		ini->ante = c->ante;
+		ini->ante->prox = ini;
 		delete c;
 	}
 	delete ini;
@@ -36,6 +39,8 @@ void Fila::insereFim(Aviao* a)
 {
 	Celula *nova = new Celula(a);
 	tam++;
+	nova->ante = fim;
+	fim->prox->ante = nova;
 	nova->prox = fim->prox;
 	fim->prox = nova;
 }
@@ -44,26 +49,30 @@ void Fila::insereTopo(Aviao* a)
 {
 	Celula *nova = new Celula(a);
 	tam++;
-	nova->prox = ini->prox;
-	ini->prox = nova;
+	nova->prox = ini;
+	ini->ante->prox = nova;
+	nova->ante = ini->ante;
+	ini->ante = nova;
 }
 
 Aviao* Fila::remove()
 {
 	Celula *c;
 	Aviao *a;
-	a = ini->prox->aeronave;
-	c = ini->prox;
-	ini->prox = c->prox;
+	a = ini->ante->aeronave;
+	c = ini->ante;
+	ini->ante = c->ante;
+	c->ante->prox = ini;
 	delete c;
 	tam--;
 	return a;
+
 }
 
 Aviao* Fila::topo()
 {
 	Aviao *a;
-	a = ini->prox->aeronave;
+	a = ini->ante->aeronave;
 	return a;
 }
 
@@ -74,7 +83,8 @@ int Fila::tamanho()
 
 bool Fila::filaVazia()
 {
-	if(ini->prox == fim)
+
+	if(fim->prox == ini)
 		return true;
 	return false;
 }

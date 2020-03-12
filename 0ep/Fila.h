@@ -8,15 +8,18 @@ class Fila
 	public:
 		int tam;
 		int passoPermissao;
+		bool emergencia;
+		double combustivelMedioFilaPouso;
 		Aviao* a = new Aviao;
 		Aviao* b = new Aviao;
 		Celula* ini = new Celula(a);
 		Celula* fim = new Celula(b);
-		Fila();
+		Fila(int emergency);
 		~Fila();
 		void insereFim(Aviao*);
 		void insereTopo(Aviao*);
-		Aviao* remove();
+		Aviao* removeTopo();
+		Aviao* removePos(Celula *q);
 		Aviao* topo();
 		int tamanho();
 	  	bool filaVazia();

@@ -10,11 +10,11 @@ class Aviao
 		int numero_voo;
 		int tempo;
 		int passoContato;
-		bool emergencia;
+		int emergencia;
 		bool pouso;
 		Aviao();
 		~Aviao();
-		void informacoes(std::string cia, std::string aeroporto, int numero_voo, int tempo, int passoContato, bool pouso, bool emergencia);
+		void informacoes(std::string cia, std::string aeroporto, int numero_voo, int tempo, int passoContato, bool pouso, int emergencia);
 };
 
 

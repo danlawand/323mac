@@ -5,8 +5,13 @@
 using namespace std;
 
 /*Construtor*/
-Fila::Fila()
+Fila::Fila(int emergency)
 {
+
+	if (emergency)
+		emergencia = 1;
+	else 
+		emergencia =0;
 	tam = 0;
 	passoPermissao = 0;
 	ini->ante = fim;
@@ -19,6 +24,7 @@ Fila::~Fila()
 {
 /*	Preciso deletar celula por celula*/
 	Celula *c;
+
 	while(!filaVazia())
 	{
 		c = ini->ante;
@@ -55,7 +61,7 @@ void Fila::insereTopo(Aviao* a)
 	ini->ante = nova;
 }
 
-Aviao* Fila::remove()
+Aviao* Fila::removeTopo()
 {
 	Celula *c;
 	Aviao *a;
@@ -66,7 +72,17 @@ Aviao* Fila::remove()
 	delete c;
 	tam--;
 	return a;
+}
 
+Aviao* Fila::removePos(Celula *q)
+{
+	Aviao *a;
+	a = q->aeronave;
+	q->prox->ante = q->ante;
+	q->ante->prox = q->prox;
+	delete q;
+	tam--;
+	return a;
 }
 
 Aviao* Fila::topo()

@@ -5,7 +5,7 @@ Aviao::Aviao(){}
 
 Aviao::~Aviao(){}
 
-void Aviao::informacoes(std::string comp, std::string ap, int nv, int t, int pContato, bool p, bool e)
+void Aviao::informacoes(std::string comp, std::string ap, int nv, int t, int pContato, bool p, int e)
 {
 	/*No construtor não é preciso digitar
 	* Aviao a = new Aviao;

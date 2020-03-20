@@ -24,18 +24,34 @@ using namespace std;
 
 void printaInformacoes (Aviao *a)
 {
-	cout<<"Vôo No: "<<a->numero_voo<<" | "<<"Cia: "<<a->cia<<" | ";
+
 	if(a->pouso)
 	{
-		cout<<"Origem: "<<a->aeroporto<<" | "<<"POUSO | ";
-		if (a->emergencia)
-			cout<<"EMERGÊNCIA | ";
-		cout<<"Tempo Combustível: "<<a->tempo<<endl;
+		cout<<a->cia<<" "<<a->numero_voo<<" "<<a->aeroporto<<"/GRU";
+
 	} else {
-		cout<<"Destino: "<<a->aeroporto<<" | "<<"DECOLAR | ";
+		cout<<a->cia<<" "<<a->numero_voo<<" GRU/"<<a->aeroporto;
+	}
+}
+
+
+void printaContato (Aviao *a)
+{
+	printaInformacoes(a);
+
+	if(a->pouso)
+	{
 		if (a->emergencia)
-			cout<<"EMERGÊNCIA | ";
-		cout<<"Tempo de Viagem: "<<a->tempo<<endl;
+			cout<<" - Pouso de Emergência - ";
+		else 
+			cout<<" - Pouso - ";
+		cout<<a->tempo<<" unidade de Combustível"<<endl;
+	} else {
+		if (a->emergencia)
+			cout<<" - Decolagem de Emergência - ";
+		else 
+			cout<<" - Decolagem - ";
+		cout<<"Tempo de Voo: "<<a->tempo<<" unidades"<<endl;
 	}
 }
 
@@ -45,22 +61,12 @@ void verificandoCombustivel(Fila *p, Fila *pe, int passoAtual)
 	Celula *q, *r;
 	q = p->fim->prox;
 	r = q->prox;
-	cout <<endl <<"Iniciando o verificaCombustivel da pista x..." << endl;
-	cout<<endl<<"___________________________________________________________________"<<endl;
-	getchar();
-	cout<<"LeFila"<<endl;
-	p->LeFila();
-
 	while (q != p->ini)
 	{	
-		cout<<"verificando Combustivel da aeronave:"<<endl;
-		getchar();
 		if (q->aeronave->pouso)
 		{
-			printaInformacoes(q->aeronave);
 			if (passoAtual - q->aeronave->passoContato == q->aeronave->tempo)
 			{
-				cout<<"Virou emergencia -1"<<endl;
 				a = p->removePos(q);
 				a->emergencia = -1;
 				pe->insereTopo(a);
@@ -72,11 +78,9 @@ void verificandoCombustivel(Fila *p, Fila *pe, int passoAtual)
 			}
 		} else 
 		{
-			printaInformacoes(q->aeronave);
 			double tempoNoPatio = ((double) q->aeronave->tempo) * 0.1;			
 			if (tempoNoPatio <= (double)(passoAtual - q->aeronave->passoContato))
 			{
-				cout<<"Virou emergencia 1"<<endl;
 				a = p->removePos(q);
 				a->emergencia = 1;
 				pe->insereFim(a);
@@ -85,10 +89,6 @@ void verificandoCombustivel(Fila *p, Fila *pe, int passoAtual)
 		q = r;
 		r = q->prox;
 	}
-	cout <<endl <<"Fim do verificaCombustivel da pista x" << endl;
-	cout<<endl<<"___________________________________________________________________"<<endl;
-	getchar();
-
 }
 
 /*Função de entrar na fila --  Acredito que bem feita
@@ -114,9 +114,6 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			if (a->tempo > 3*p1->tam + p1->passoPermissao)
 			{
 				p1->insereFim(a);
-				cout<<"Inseriu na P1";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 			else
 			{
@@ -128,9 +125,6 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			if (a->tempo > 3*p2->tam + p2->passoPermissao)
 			{
 				p2->insereFim(a);
-				cout<<"Inseriu na P2";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 			else
 			{
@@ -144,15 +138,9 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 				aleat = (rand()%100);
 				if (aleat < 50){
 					p1->insereFim(a);
-					cout<<"Inseriu na P1";
-					getchar();
-					cout<<endl<<"___________________________________________________________________"<<endl;
 				}
 				else {
 					p2->insereFim(a);
-					cout<<"Inseriu na P2";
-					getchar();
-					cout<<endl<<"___________________________________________________________________"<<endl;
 				}
 			}
 			else
@@ -166,30 +154,18 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 		//Se o tempo de espera das 3 pistas forem iguais aloco no na pista 3 que tem menor probabilidade de alocar voos
 		if (p3->tam + p3->passoPermissao == p2->tam + p2->passoPermissao && p3->tam + p3->passoPermissao == p1->tam + p1->passoPermissao){
 			p3->insereFim(a);
-			cout<<"Inseriu na P3";
-			getchar();
-			cout<<endl<<"___________________________________________________________________"<<endl;
 		}
 		//p1 menor
 		else if (p1->tam + p1->passoPermissao <= p2->tam + p2->passoPermissao && p1->tam + p1->passoPermissao <= p3->tam + p3->passoPermissao){
 			p1->insereFim(a);
-			cout<<"Inseriu na P1";
-			getchar();
-			cout<<endl<<"___________________________________________________________________"<<endl;
 		}
 		//p2 menor
 		else if (p2->tam + p2->passoPermissao <= p3->tam + p3->passoPermissao && p2->tam + p2->passoPermissao <= p1->tam + p1->passoPermissao){
 			p2->insereFim(a);
-			cout<<"Inseriu na P2";
-			getchar();
-			cout<<endl<<"___________________________________________________________________"<<endl;
 		}
 		//p3 menor
 		else if (p3->tam + p3->passoPermissao <= p2->tam + p2->passoPermissao && p3->tam + p3->passoPermissao <= p1->tam + p1->passoPermissao){
 			p3->insereFim(a);
-			cout<<"Inseriu na P3";
-			getchar();
-			cout<<endl<<"___________________________________________________________________"<<endl;
 		}
 		//com certeza o p3 é maior
 		else if (p1->tam + p1->passoPermissao == p2->tam + p2->passoPermissao)
@@ -197,15 +173,9 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			aleat = (rand()%100);
 			if (aleat < 50){
 				p1->insereFim(a);
-				cout<<"Inseriu na P1";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 			else {
 				p2->insereFim(a);
-				cout<<"Inseriu na P2";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 		}
 		//com certeza o p2 é maior
@@ -214,15 +184,9 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			aleat = (rand()%100);
 			if (aleat < 50){
 				p1->insereFim(a);
-				cout<<"Inseriu na P1";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 			else {
-				p3->insereFim(a);
-				cout<<"Inseriu na P3";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;				
+				p3->insereFim(a);	
 			}
 		}
 		//com certeza o p1 é maior
@@ -231,15 +195,9 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			aleat = (rand()%100);
 			if (aleat < 50){
 				p3->insereFim(a);
-				cout<<"Inseriu na P3";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 			else {
 				p2->insereFim(a);
-				cout<<"Inseriu na P2";
-				getchar();
-				cout<<endl<<"___________________________________________________________________"<<endl;
 			}
 		}
 		
@@ -327,7 +285,7 @@ int main()
 	int qntdd;
 	int aleat;
 	srand(7);
-	
+
 
 	/* Considero cada passo de tempo de simulação seja equivalente a 6 minutos na vida real 
 	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
@@ -336,14 +294,17 @@ int main()
 
 	while(i < ts)
 	{
-		qntdd = (rand() % 10);
-		cout<<endl<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl;
+		cout<<"Instante: "<<i<<endl; 
+		qntdd = (rand() % 4);
+		cout<<qntdd<<" aviões enviam sinais"<<endl; 
+		//cout<<endl<<"Numero de Aviões que entraram em contato com a torre de comando: "<<qntdd<<endl;
 		while (qntdd > 0)
 		{
 			//Contador da quantidade de aeronaves por dia
 			navioes++;
 
-			numero_voo = (rand() % 9999);
+
+			numero_voo = 1000 + (rand() % 8999);
 
 			aeroporto = aeroportos[(rand() % 53)];
 
@@ -365,24 +326,25 @@ int main()
 			Aviao *novo = new Aviao;
 			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, pouso, emergencia);
 
-			cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
+		//	cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
 
-			printaInformacoes(novo);
+
+			printaContato(novo);
 
 
 			
 			
 
 			/*Função de entrar na fila*/
-			cout<<endl<<"Antes de escolhendoPista"<<endl;
+/*			cout<<endl<<"Antes de escolhendoPista"<<endl;
 			cout<<"Tam p1: "<<p1.tam<<endl;
 			cout<<"Tam p2: "<<p2.tam<<endl;
-			cout<<"Tam p3: "<<p3.tam<<endl;
+			cout<<"Tam p3: "<<p3.tam<<endl;*/
 			escolhendoPista(&p1, &p2, &p3, &pe, novo);
-			cout<<endl<<"depois de escolhendoPista"<<endl;
+	/*		cout<<endl<<"depois de escolhendoPista"<<endl;
 			cout<<"Tam p1: "<<p1.tam<<endl;
 			cout<<"Tam p2: "<<p2.tam<<endl;
-			cout<<"Tam p3: "<<p3.tam<<endl<<endl<<endl;
+			cout<<"Tam p3: "<<p3.tam<<endl<<endl<<endl;*/
 
 			qntdd--;
 		}
@@ -397,10 +359,10 @@ int main()
 		//Função de Pouso ou Decolagem
 		count.c_Pousado = (usoPista(&p1, &p2, &p3, &pe, i) + count.c_Pousado)/2;
 
-		cout<<"depois do usoPista"<<endl;
+	/*	cout<<"depois do usoPista"<<endl;
 		cout<<"Tam p1: "<<p1.tam<<endl;
 		cout<<"Tam p2: "<<p2.tam<<endl;
-		cout<<"Tam p3: "<<p3.tam<<endl;
+		cout<<"Tam p3: "<<p3.tam<<endl;*/
 
 
 		cout<<endl;

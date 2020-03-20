@@ -16,6 +16,7 @@ class Fila
 		Celula* fim = new Celula(b);
 		Fila(int emergency);
 		~Fila();
+		void LeFila();
 		void insereFim(Aviao*);
 		void insereTopo(Aviao*);
 		Aviao* removeTopo();

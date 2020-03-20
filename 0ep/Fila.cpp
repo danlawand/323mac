@@ -36,6 +36,26 @@ Fila::~Fila()
 	delete fim;
 }
 
+void Fila::LeFila()
+{
+/*	Preciso deletar celula por celula*/
+	Celula *c;
+	int i = tam;
+	c = fim;
+	while (c != ini)
+	{
+		if (c == fim)
+			cout<<"fim - ";
+		else{
+			i--;
+			cout<<i<<" - ";
+		} 
+		c = c->prox;
+	}
+	cout<<"ini"<<endl;
+}
+
+
 /* <---<----<---<------
 * INI 1 2 3 4 5 6 7 FIM
 * FIM->PROX = 7;

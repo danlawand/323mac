@@ -21,10 +21,9 @@
 
 using namespace std;
 
-
+//Função que printa no. do voo, cia e aeroporto
 void printaInformacoes (Aviao *a)
 {
-
 	if(a->pouso)
 	{
 		cout<<a->cia<<" "<<a->numero_voo<<" "<<a->aeroporto<<"/GRU";
@@ -34,7 +33,7 @@ void printaInformacoes (Aviao *a)
 	}
 }
 
-
+//Função que printa informações detalhadas de quando foi feito o contato
 void printaContato (Aviao *a)
 {
 	printaInformacoes(a);
@@ -73,7 +72,9 @@ void verificandoCombustivel(Fila *p, Fila *pe, int passoAtual)
 			} else if (q->aeronave->tempo < passoAtual - q->aeronave->passoContato)
 			{
 				a = p->removePos(q);
-				cout<<"Foi pra Viracopos"<<endl; 
+				printaInformacoes(a);
+				cout<<" foi desviado para Viracopos"<<endl; 
+				cout<<"SERA"<<endl;
 				delete a;
 			}
 		} else 
@@ -96,39 +97,46 @@ Talvez eu possa alterar esse primeiro if e criar uma nova função para escolher
 com base na emergência?
 
 */
-void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
+
+//Função que determina se vaii colocar no fim ou no início da fila
+void poeNaFila(Fila *p, Aviao *a)
+{
+	if (a->emergencia != 0)
+		p->insereTopo(a);
+	else
+		p->insereFim(a);
+}
+
+//Função que determina qual pista está mais livre
+void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 {
 	int aleat;
-	//EMERGÊNCIA DONE
-	if (a->emergencia != 0)
-	{
-		if (a->emergencia == -1)
-			pe->insereTopo(a);
-		else 
-			pe->insereFim(a);
-	} else if (a->pouso) //POUSO DONE
+	if (a->pouso) //POUSO DONE
 	{
 		//Se o tempo de espera de p1 é menor que p2
 		if(3*(p1->tam) + p1->passoPermissao < 3*(p2->tam) + p2->passoPermissao)
 		{
 			if (a->tempo > 3*p1->tam + p1->passoPermissao)
 			{
-				p1->insereFim(a);
+				poeNaFila(p1,a);
 			}
 			else
 			{
-				cout<<"Foi pra Viracopos"<<endl; 
+				printaInformacoes(a);
+				cout<<" foi desviado para Viracopos"<<endl; 
 				delete a;
+				cout<<"SERA1"<<endl;
 			}
 		} else if (3*(p2->tam) + p2->passoPermissao < 3*(p1->tam) + p1->passoPermissao)
 		{
 			if (a->tempo > 3*p2->tam + p2->passoPermissao)
 			{
-				p2->insereFim(a);
+				poeNaFila(p2,a);
 			}
 			else
 			{
-				cout<<"Foi pra Viracopos"<<endl;
+				printaInformacoes(a);
+				cout<<" foi desviado para Viracopos"<<endl;
 				delete a;
 			}
 		} else //Se são iguais os tempos escolho aleatoriamente p1 ou p2
@@ -137,15 +145,16 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 			{
 				aleat = (rand()%100);
 				if (aleat < 50){
-					p1->insereFim(a);
+					poeNaFila(p1,a);
 				}
 				else {
-					p2->insereFim(a);
+					poeNaFila(p2,a);
 				}
 			}
 			else
 			{
-				cout<<"Foi pra Viracopos"<<endl;
+				printaInformacoes(a);
+				cout<<" foi desviado para Viracopos"<<endl;
 				delete a;
 			}
 		}
@@ -153,29 +162,29 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 	{
 		//Se o tempo de espera das 3 pistas forem iguais aloco no na pista 3 que tem menor probabilidade de alocar voos
 		if (p3->tam + p3->passoPermissao == p2->tam + p2->passoPermissao && p3->tam + p3->passoPermissao == p1->tam + p1->passoPermissao){
-			p3->insereFim(a);
+			poeNaFila(p3,a);
 		}
 		//p1 menor
 		else if (p1->tam + p1->passoPermissao <= p2->tam + p2->passoPermissao && p1->tam + p1->passoPermissao <= p3->tam + p3->passoPermissao){
-			p1->insereFim(a);
+			poeNaFila(p1,a);
 		}
 		//p2 menor
 		else if (p2->tam + p2->passoPermissao <= p3->tam + p3->passoPermissao && p2->tam + p2->passoPermissao <= p1->tam + p1->passoPermissao){
-			p2->insereFim(a);
+			poeNaFila(p2,a);
 		}
 		//p3 menor
 		else if (p3->tam + p3->passoPermissao <= p2->tam + p2->passoPermissao && p3->tam + p3->passoPermissao <= p1->tam + p1->passoPermissao){
-			p3->insereFim(a);
+			poeNaFila(p3,a);
 		}
 		//com certeza o p3 é maior
 		else if (p1->tam + p1->passoPermissao == p2->tam + p2->passoPermissao)
 		{
 			aleat = (rand()%100);
 			if (aleat < 50){
-				p1->insereFim(a);
+				poeNaFila(p1,a);
 			}
 			else {
-				p2->insereFim(a);
+				poeNaFila(p2,a);
 			}
 		}
 		//com certeza o p2 é maior
@@ -183,10 +192,10 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 		{
 			aleat = (rand()%100);
 			if (aleat < 50){
-				p1->insereFim(a);
+				poeNaFila(p1,a);
 			}
 			else {
-				p3->insereFim(a);	
+				poeNaFila(p3,a);	
 			}
 		}
 		//com certeza o p1 é maior
@@ -194,10 +203,10 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 		{
 			aleat = (rand()%100);
 			if (aleat < 50){
-				p3->insereFim(a);
+				poeNaFila(p3,a);
 			}
 			else {
-				p2->insereFim(a);
+				poeNaFila(p2,a);
 			}
 		}
 		
@@ -205,11 +214,13 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, Aviao *a)
 }
 
 /*Função para Pouso e Decolagem, mais contador de combustível dos que já pousaram*/
-double usoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, int passoAtual)
+double usoPista(Fila *p1, Fila *p2, Fila *p3, int passoAtual)
 {
 	int avioes = 0;
 	int tcombustivel = 0;
 	Aviao *a;
+	Aviao *b;
+	Aviao *c;
 
 	/*Operando a Pista p1*/
 	if (!p1->filaVazia() && p1->passoPermissao == 0)
@@ -217,11 +228,20 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, int passoAtual)
 		/*Pouso ou Decolagem*/
 		p1->passoPermissao = 3;
 		a = p1->removeTopo();
+		printaInformacoes(a);
+
 		if (a->pouso)
 		{
+			cout<<" pousa na pista 1";
 			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
 			avioes++;
 		}
+		else 
+			cout<<" decola na pista 1";
+		if (a->emergencia != 0)
+			cout<<" (Emergência)"<<endl;
+		else
+			cout<<endl;
 		delete a;
 	}
 	/*Operando a Pista p2*/
@@ -229,13 +249,21 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, int passoAtual)
 	{
 		/*Pouso ou Decolagem*/
 		p2->passoPermissao = 3;
-		a = p2->removeTopo();
-		if (a->pouso)
+		b = p2->removeTopo();
+		printaInformacoes(b);
+		if (b->pouso)
 		{
-			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			cout<<" pousa na pista 2";
+			tcombustivel = b->tempo - (b->passoContato - passoAtual - 1);
 			avioes++;
 		}
-		delete a;
+		else 
+			cout<<" decola na pista 2";
+		if (b->emergencia != 0)
+			cout<<" (Emergência)"<<endl;
+		else
+			cout<<endl;
+		delete b;
 	}
 
 	/*Operando a Pista p3*/
@@ -243,17 +271,31 @@ double usoPista(Fila *p1, Fila *p2, Fila *p3, Fila *pe, int passoAtual)
 	{
 		/*Pouso ou Decolagem*/
 		p3->passoPermissao = 3;
+		c = p3->topo();
 		a = p3->removeTopo();
-		if (a->pouso)
+
+//		printaInformacoes(c);
+		if (c->pouso)
 		{
-			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			cout<<" pousa na pista 3";
+			tcombustivel = c->tempo - (c->passoContato - passoAtual - 1);
 			avioes++;
 		}
+		else {
+			
+			cout<<" decola na pista 3";
+		}
+		if (c->emergencia != 0){
+			cout<<" (Emergência)"<<endl;
+		}
+		else
+			cout<<endl;
 		delete a;
 	}
 	if(avioes == 0)
 		return 0;
 	double media = (double) tcombustivel/((double)avioes);
+
 	return media;
 }
 
@@ -279,13 +321,15 @@ int main()
 	/*pista 1, 2, 3 e fila dos de emergência*/
 	Fila p1(0), p2(0), p3(0), pe(1);
 
-
 	int i = 0;
 	int navioes = 0;
 	int qntdd;
 	int aleat;
 	srand(7);
 
+	int k = 0;
+	Aviao *a;
+	Celula *q, *r;
 
 	/* Considero cada passo de tempo de simulação seja equivalente a 6 minutos na vida real 
 	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
@@ -303,7 +347,6 @@ int main()
 			//Contador da quantidade de aeronaves por dia
 			navioes++;
 
-
 			numero_voo = 1000 + (rand() % 8999);
 
 			aeroporto = aeroportos[(rand() % 53)];
@@ -312,39 +355,96 @@ int main()
 
 			tempo = (rand()%100);
 
-			aleat = (rand()%100);
-			pouso = 0;
-			if (aleat < 50)
-				pouso = 1;
-
+			
 			aleat = (rand()%100);
 			emergencia = 0;
 			//Considero 20% a probabilidade de um vôo ser emergencial
 			if(aleat <  20)
 				emergencia = 1;
 
+			aleat = (rand()%100);
+			pouso = 0;
+			if (aleat < 50)
+			{
+				pouso = 1;
+				if (tempo == 0)
+					emergencia = -1;
+			}
+			
+
 			Aviao *novo = new Aviao;
 			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, pouso, emergencia);
 
 		//	cout<<" Aeronave comunicando a Torre de Comando.\n"<<"______________________________________\n";
 
-
 			printaContato(novo);
 
+			q = pe.fim->prox;
+			r = q->prox;
 
-			
-			
+			//EMERGÊNCIA DONE
+			if (novo->emergencia != 0)
+			{
+				if (novo->emergencia == -1) 
+				{
 
-			/*Função de entrar na fila*/
-/*			cout<<endl<<"Antes de escolhendoPista"<<endl;
-			cout<<"Tam p1: "<<p1.tam<<endl;
-			cout<<"Tam p2: "<<p2.tam<<endl;
-			cout<<"Tam p3: "<<p3.tam<<endl;*/
-			escolhendoPista(&p1, &p2, &p3, &pe, novo);
-	/*		cout<<endl<<"depois de escolhendoPista"<<endl;
-			cout<<"Tam p1: "<<p1.tam<<endl;
-			cout<<"Tam p2: "<<p2.tam<<endl;
-			cout<<"Tam p3: "<<p3.tam<<endl<<endl<<endl;*/
+					pe.insereTopo(novo);
+				}	
+				else
+				{ 
+					pe.insereFim(novo);
+				}
+				for (k = 0; k < 3 && q != pe.ini; k++)
+				{
+					if (q == pe.ini)
+						a = pe.removePos(q);
+					q = r;
+					r = q->prox;
+					escolhendoPista(&p1, &p2, &p3, a);
+				}
+				
+			} else 
+			{
+				/*Função de entrar na fila*/
+	/*			cout<<endl<<"Antes de escolhendoPista"<<endl;
+				cout<<"Tam p1: "<<p1.tam<<endl;
+				cout<<"Tam p2: "<<p2.tam<<endl;
+				cout<<"Tam p3: "<<p3.tam<<endl;
+	*/
+				for (k = 0; k < 3 && q != pe.ini; k++)
+				{
+					a = pe.removePos(q);
+					escolhendoPista(&p1, &p2, &p3, a);
+					q = r;
+					r = q->prox;
+				}
+				escolhendoPista(&p1, &p2, &p3, novo);		
+
+	
+		/*		cout<<endl<<"depois de escolhendoPista"<<endl;
+				cout<<"Tam p1: "<<p1.tam<<endl;
+				cout<<"Tam p2: "<<p2.tam<<endl;
+				cout<<"Tam p3: "<<p3.tam<<endl<<endl<<endl;
+		*/
+			}
+
+/*
+	Instante 0:
+
+	(4 aviões enviam sinais)
+	LA329 ACA/GRU - Pouso - 2 unidades de Combustível
+	LA563 ADZ/GRU - Pouso - 2 unidades de Combustível
+	LA140 GRU/BOG - Decolagem - Tempo de Voo: 60 unidades
+	JB666 GRU/BSB - Decolagem de Emergência - Tempo de Voo: 30 unidades 
+
+	Saída:
+	- Avião LA329 ACA/GRU pousa na pista 1 
+	- Avião LA563 ADZ/GRU pousa na pista 2
+	- Avião LA923 ANF/GRU pousa na pista 3 (Emergência)
+	- Avião LA734 AQP/GRU é desviado para aeroporto vizinho 
+	- Avião LA923 GRU/ANF está aguardando liberação para decolagem
+	- Avião LA734 GRU/AQP está aguardando liberação para decolagem
+*/
 
 			qntdd--;
 		}
@@ -355,10 +455,8 @@ int main()
 			p2.passoPermissao--;
 		if (p3.passoPermissao > 0)
 			p3.passoPermissao--;
-
 		//Função de Pouso ou Decolagem
-		count.c_Pousado = (usoPista(&p1, &p2, &p3, &pe, i) + count.c_Pousado)/2;
-
+		count.c_Pousado = (usoPista(&p1, &p2, &p3, i) + count.c_Pousado)/2;
 	/*	cout<<"depois do usoPista"<<endl;
 		cout<<"Tam p1: "<<p1.tam<<endl;
 		cout<<"Tam p2: "<<p2.tam<<endl;
@@ -366,8 +464,6 @@ int main()
 
 
 		cout<<endl;
-
-
 
 		/*Verifica se alguém está ficando sem combustível e manda pra fila de emergência*/
 		verificandoCombustivel(&p1, &pe, i);

@@ -2,8 +2,6 @@
 #define CATEGORIA_H
 #include <iostream>
 
-#define MAX_COMPANHIAS 33
-#define MAX_AEROPORTOS 54
 
 std::string companhias[33] = 
 {
@@ -100,6 +98,5 @@ std::string aeroportos[54] =
 	"REC",
 	"FLN"
 };
-
 
 #endif

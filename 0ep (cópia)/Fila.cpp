@@ -5,11 +5,15 @@
 using namespace std;
 
 /*Construtor*/
-Fila::Fila(int numero_da_pista)
+Fila::Fila(int emergency, int numero_da_pista)
 {
 	num_pista = numero_da_pista;
+	if (emergency)
+		emergencia = 1;
+	else 
+		emergencia =0;
 	tam = 0;
-	tempoEspera = 0;
+	passoPermissao = 0;
 	ini->ante = fim;
 	ini->prox = nullptr;
 	fim->ante = nullptr;
@@ -18,6 +22,7 @@ Fila::Fila(int numero_da_pista)
 /*Destrutor*/
 Fila::~Fila()
 {
+/*	Preciso deletar celula por celula*/
 	Celula *c;
 
 	while(!filaVazia())
@@ -30,6 +35,29 @@ Fila::~Fila()
 	delete ini;
 	delete fim;
 }
+
+void Fila::LeFila()
+{
+/*	Preciso deletar celula por celula*/
+	Celula *c, *r;
+	int i = tam;
+	c = fim;
+	//cout<<"Primeiro da Fila  -----  "<<ini->ante->ante->aeronave->cia<<endl;
+	cout<<"Tamanho: "<<tam<<endl;
+	while (c != ini)
+	{
+		if (c == fim)
+			cout<<"fim - ";
+		else{
+			i--;
+			cout<<c->aeronave->cia<<" - "<<c->aeronave->numero_voo<<endl;
+		} 
+		c = c->prox;
+	}
+	if (c == ini)
+		cout<<"ini"<<endl;
+}
+
 
 /* <---<----<---<------
 * INI 1 2 3 4 5 6 7 FIM
@@ -67,17 +95,6 @@ Aviao* Fila::removeTopo()
 	tam--;
 	delete c;
 	return a;
-}
-
-void Fila::moveParaTopo(Celula *q)
-{
-
-	q->prox->ante = q->ante;
-	q->ante->prox = q->prox;
-	q->prox = ini;
-	q->ante = ini->ante;
-	ini->ante->prox = q;
-	ini->ante = q;	
 }
 
 Aviao* Fila::removePos(Celula *q)

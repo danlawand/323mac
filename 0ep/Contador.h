@@ -7,13 +7,13 @@
 class Contador
 {
 	public:
-		double c_Pousado;
+		double combustivel_Pousado[2];
+		double tempoMedio_esperaPouso[2];
+		double tempoMedio_esperaDecolagem[2];
+		double combustivelMedio_esperaPouso[2];
+		double quantidadeVoos_emergencia;
 		Contador();
 		~Contador();
-		double calculaMediaFila(Fila *p, int passoAtual, bool mediaDeTempo, bool pouso);
-		double tempoMedio_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
-		double tempoMedio_esperaDecolagem(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
-		double combustivelMedio_esperaPouso(Fila *p1, Fila *p2, Fila *p3, int passoAtual);
 };
 
 #endif

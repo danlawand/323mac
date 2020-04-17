@@ -42,33 +42,20 @@ void printaInformacoes (Aviao *a)
 
 }
 
-void printaPista(Fila *p, int i, Contador *count)
+void printaPista(Fila *p)
 {
+	int i =  1;
 	Celula *q, *r;
 	q = p->ini->ante;
 	r = q->ante;
 	while(!p->filaVazia() && q != p->fim)
 	{
-		cout<<"- Avião ";
+		cout<<i<<"  ";
 		printaInformacoes(q->aeronave);
-		cout<<" está aguardando liberação para ";
-		if(q->aeronave->pouso)
-		{
-			cout<<"pouso";
-			count->tempoMedio_esperaPouso[0] += (i - q->aeronave->passoContato);
-			count->tempoMedio_esperaPouso[1]++;
-			count->combustivelMedio_esperaPouso[0] += q->aeronave->tempo - (i - q->aeronave->passoContato);
-			count->combustivelMedio_esperaPouso[1]++;
-		}
-		else 
-		{
-			cout<<"decolagem";
-			count->tempoMedio_esperaDecolagem[0] += (i - q->aeronave->passoContato);
-			count->tempoMedio_esperaDecolagem[1]++;
-		}
 		cout<<endl;
 		q = r;
 		r = q->ante;
+		i++;
 	}
 }
 
@@ -259,51 +246,55 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 }
 
 //Função para Pouso e Decolagem, mais contador de combustível dos que já pousaram
-void usoPista(Fila *p, int passoAtual, Contador *count)
+double usoPista(Fila *p, int passoAtual)
 {
+	int avioes = 0;
+	int tcombustivel = 0;
 	Aviao *a;
 	
-	//Operando a Pista p
+	/*Operando a Pista p*/
 	if (!p->filaVazia() && p->tempoEspera == 0)
 	{
 		p->tempoEspera = 3;
 		a = p->removeTopo();
-		cout<<"- Avião ";
 		printaInformacoes(a);
+
 		if (a->pouso)
 		{	
-			cout<<" pousa na pista "<<p->num_pista;
-			count->combustivel_Pousado[0] = a->tempo - (a->passoContato - passoAtual + 1) + count->combustivel_Pousado[0];
-			count->combustivel_Pousado[1] = 1 + count->combustivel_Pousado[1];
+			if(p->num_pista != 0)
+				cout<<" pousa na pista "<<p->num_pista;
+			tcombustivel = a->tempo - (a->passoContato - passoAtual - 1);
+			avioes++;
 		}
 		else 
 		{
-			cout<<" decola na pista "<<p->num_pista;
+			if(p->num_pista != 0)
+				cout<<" decola na pista "<<p->num_pista;
 		}
 		if (a->emergencia != 0)
-		{
-			count->quantidadeVoos_emergencia++;
 			cout<<" (Emergência)"<<endl;
-		}
 		else
-		{
 			cout<<endl;
-		}
 	}
 	a = nullptr;
+
+	if(avioes == 0)
+		return 0;
+	double media = (double) tcombustivel/((double)avioes);
+
+	return media;
 }
 
 
 int main()
 {
-	int tempo_de_simulacao;
+	int ts;
 	cout<<"Aeroporto Internacional GRU\n";
 	cout<<"________________________________\n\n";
 	cout<<"Digite o tempo de simulação:";
-	cin>>tempo_de_simulacao;
+	cin>>ts;
 	cout<<"\n\n";
 
-	//Variaveis do Avião
 	std::string cia;
 	std::string aeroporto;
 	int numero_voo;
@@ -311,42 +302,35 @@ int main()
 	bool emergencia;
 	bool pouso;
 
-	//pista 1, 2, 3 e pista de espera
-	Fila p1(1), p2(2), p3(3), p_espera(4);
+	Contador count;
 
-	//passo atual
+	//pista 1, 2, 3
+	Fila p1(1), p2(2), p3(3);
+
 	int i = 0;
-
-	int noTotal_avioes = 0;
-	int quantidade_deContatos;
-	double media_combustivel_Pousado;
-	double media_espera_pouso;
-	double media_espera_decolagem;
-	double media_combustivel_esperaPouso;
-
-	//semente dos nos. aleatórios
+	int navioes = 0;
+	int qntdd;
+	int aleat;
 	srand(7);
 
-	//variavel que armazena no. aleatório gerado
-	int aleat;
-
-	//Construtor do contador das informações pedidas no ep
-	Contador count;
+	int k = 0;
+	Aviao *a;
+	Celula *q, *r;
 
 	/* Considero cada passo de tempo de simulação seja equivalente a 6 minutos na vida real 
 	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
 	*  1000 aviões / 24 Horas =~ 41 aviões/Hora ==> 4 aviões/passo
  	*/
 
-	while(i < tempo_de_simulacao)
+	while(i < ts)
 	{
 		cout<<"\nInstante: "<<i<<endl; 
-		quantidade_deContatos = (rand() % 4);
-		cout<<quantidade_deContatos<<" aviões enviam sinais"<<endl; 
-		while (quantidade_deContatos > 0)
+		qntdd = (rand() % 4);
+		cout<<qntdd<<" aviões enviam sinais"<<endl; 
+		while (qntdd > 0)
 		{
 			//Contador da quantidade de aeronaves por dia
-			noTotal_avioes++;
+			navioes++;
 
 			numero_voo = 1000 + (rand() % 8999);
 
@@ -371,21 +355,37 @@ int main()
 				if (tempo == 0)
 					emergencia = -1;
 			}
+			
+
 			Aviao *novo = new Aviao;
 			novo->informacoes(cia, aeroporto, numero_voo, tempo, i, pouso, emergencia);
 
 			printaContato(novo);
-			p_espera.insereTopo(novo);
-			quantidade_deContatos--;
+			escolhendoPista(&p1, &p2, &p3, novo);
+
+
+/*
+	Instante 0:
+
+	(4 aviões enviam sinais)
+	LA329 ACA/GRU - Pouso - 2 unidades de Combustível
+	LA563 ADZ/GRU - Pouso - 2 unidades de Combustível
+	LA140 GRU/BOG - Decolagem - Tempo de Voo: 60 unidades
+	JB666 GRU/BSB - Decolagem de Emergência - Tempo de Voo: 30 unidades 
+
+	Saída:
+	- Avião LA329 ACA/GRU pousa na pista 1 
+	- Avião LA563 ADZ/GRU pousa na pista 2
+	- Avião LA923 ANF/GRU pousa na pista 3 (Emergência)
+	- Avião LA734 AQP/GRU é desviado para aeroporto vizinho 
+	- Avião LA923 GRU/ANF está aguardando liberação para decolagem
+	- Avião LA734 GRU/AQP está aguardando liberação para decolagem
+*/
+
+			qntdd--;
 		}
 
-		cout<<endl<<"Saída:"<<endl;
-		while(!p_espera.filaVazia())
-		{
-			escolhendoPista(&p1, &p2, &p3, p_espera.removeTopo());
-		}
-
-		//Tempo de espera das pistas sendo diminuído
+		//Tempo de espera sendo diminuído
 		if (p1.tempoEspera > 0)
 			p1.tempoEspera--;
 		if (p2.tempoEspera > 0)
@@ -393,68 +393,27 @@ int main()
 		if (p3.tempoEspera > 0)
 			p3.tempoEspera--;
 
-		count.quantidadeVoos_emergencia = 0;
 		//Função de Pouso ou Decolagem
-		usoPista(&p1, i, &count);
-		usoPista(&p2, i, &count);
-		usoPista(&p3, i, &count);	
-		//count.combustivel_Pousado += usoPista(&p1, i);
-		//count.combustivel_Pousado += usoPista(&p2, i);
-		//count.combustivel_Pousado += usoPista(&p3, i);	
+		count.c_Pousado += usoPista(&p1, i);
+		count.c_Pousado += usoPista(&p2, i);
+		count.c_Pousado += usoPista(&p3, i);	
+		cout<<endl;
 
 		//Verifica se alguém está ficando sem combustível e manda pro topo como emergência
 		verificandoCombustivel(&p1, i);
 		verificandoCombustivel(&p2, i);
 		verificandoCombustivel(&p3, i);
 
-		count.tempoMedio_esperaPouso[0] = 0;
-		count.tempoMedio_esperaPouso[1] = 0;
 
-		count.tempoMedio_esperaDecolagem[0] = 0;
-		count.tempoMedio_esperaDecolagem[1] = 0;
-
-		count.combustivelMedio_esperaPouso[0] = 0;
-		count.combustivelMedio_esperaPouso[1] = 0;
-
-		printaPista(&p1, i, &count);
-		printaPista(&p2, i, &count);
-		printaPista(&p3, i, &count);
-
-
-		if (count.tempoMedio_esperaPouso[1] != 0)
-			media_espera_pouso = count.tempoMedio_esperaPouso[0]/count.tempoMedio_esperaPouso[1];
-		else
-			media_espera_pouso = 0;
-
-		cout<<"Tempo médio de espera para pouso: "<<count.tempoMedio_esperaPouso[0]<<"/"<<count.tempoMedio_esperaPouso[1]<<" == "<<media_espera_pouso<<endl;
-
-
-		if (count.tempoMedio_esperaDecolagem[1]!= 0)
-			media_espera_decolagem = count.tempoMedio_esperaDecolagem[0]/count.tempoMedio_esperaDecolagem[1];
-		else
-			media_espera_decolagem = 0;
-
-		cout<<"Tempo médio de espera para decolagem: "<<count.tempoMedio_esperaDecolagem[0]<<"/"<<count.tempoMedio_esperaDecolagem[1]<<" == "<<media_espera_decolagem<<endl;
-
-
-		if (count.combustivelMedio_esperaPouso[1] != 0)
-			media_combustivel_esperaPouso = count.combustivelMedio_esperaPouso[0]/count.combustivelMedio_esperaPouso[1];
-		else
-			media_combustivel_esperaPouso = 0;
-
-		cout<<"Quantidade média de combustı́vel disponı́vel dos aviões esperando para pousar: "<<count.combustivelMedio_esperaPouso[0]<<"/"<<count.combustivelMedio_esperaPouso[1]<<" == "<<media_combustivel_esperaPouso<<endl;
-
-
-		if (count.combustivel_Pousado[1] != 0)
-			media_combustivel_Pousado = count.combustivel_Pousado[0]/count.combustivel_Pousado[1];
-		else
-			media_combustivel_Pousado = 0;
-
-		cout<<"Quantidade média de combustı́vel disponı́vel dos aviões que pousaram: "<<count.combustivel_Pousado[0]<<"/"<<count.combustivel_Pousado[1]<<" == "<<media_combustivel_Pousado<<endl;
-
-		cout<<"Quantidade de aviões pousando/decolando em condições de emergência no momento: "<<count.quantidadeVoos_emergencia<<endl;
+		/*cout<<endl<<p1.tam+p2.tam+p3.tam<<" Aviões estão esperando para pousar e/ou decolar"<<endl;
+		cout<<"Tempo médio de espera para pouso: "<<count.tempoMedio_esperaPouso(&p1, &p2, &p3, i)<<endl;
+		/*cout<<"Tempo médio de espera para decolagem: "<<count.tempoMedio_esperaDecolagem(&p1, &p2, &p3, i)<<endl;
+		cout<<"Quantidade média de combustı́vel dos aviões esperando para pousar: "<<count.combustivelMedio_esperaPouso(&p1, &p2, &p3, i)<<endl;
+		cout<<"Quantidade média de combustı́vel dos aviões que pousaram: "<<count.c_Pousado<<endl;
+		/*cout<<"Quantidade de aviões pousando/decolando em condições de emergência: "<<endl;*/
 
 		i++;
+
 	}
-	cout<<endl<<noTotal_avioes<<" Aviões comunicaram a torre de comando"<<endl<<endl;
+	cout<<endl<<navioes<<" Aviões comunicaram a torre de comando"<<endl<<endl;
 }

@@ -16,6 +16,7 @@ class Fila
 		Celula* fim = new Celula(b);
 		Fila(int numero_da_pista);
 		~Fila();
+		void LeFila();
 		void insereFim(Aviao*);
 		void insereTopo(Aviao*);
 		Aviao* removeTopo();
@@ -24,6 +25,10 @@ class Fila
 		Aviao* topo();
 		int tamanho();
 	  	bool filaVazia();
+
+	  	/*Será que faço uma função para pesquisar qual é
+	  	o que mais tem urgência?*/
+
 };
 
 #endif

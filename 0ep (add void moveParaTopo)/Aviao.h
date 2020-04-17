@@ -17,4 +17,5 @@ class Aviao
 		void informacoes(std::string cia, std::string aeroporto, int numero_voo, int tempo, int passoContato, bool pouso, int emergencia);
 };
 
+
 #endif

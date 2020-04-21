@@ -1,33 +1,31 @@
+/*\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__
+
+  AO PREENCHER ESSE CABEÇALHO COM O MEU NOME E O MEU NÚMERO USP, 
+  DECLARO QUE SOU O ÚNICO AUTOR E RESPONSÁVEL POR ESSE PROGRAMA. 
+  TODAS AS PARTES ORIGINAIS DESSE EXERCÍCIO PROGRAMA (EP) FORAM 
+  DESENVOLVIDAS E IMPLEMENTADAS POR MIM SEGUINDO AS INSTRUÇÕES DESSE EP
+  E QUE PORTANTO NÃO CONSTITUEM PLÁGIO. DECLARO TAMBÉM QUE SOU RESPONSÁVEL
+  POR TODAS AS CÓPIAS DESSE PROGRAMA E QUE EU NÃO DISTRIBUI OU FACILITEI A
+  SUA DISTRIBUIÇÃO. ESTOU CIENTE QUE OS CASOS DE PLÁGIO SÃO PUNIDOS COM 
+  REPROVAÇÃO DIRETA NA DISCIPLINA.
+
+  Nome: DANIEL ANGELO ESTEVES LAWAND
+  NUSP: 10297693
+
+  ep0.cpp
+
+  \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include "Aviao.h"
-#include "Fila.h"
-#include "Celula.h"
-#include "Categoria.h"
-#include "Contador.h"
+#include "aviao.h"
+#include "fila.h"
+#include "celula.h"
+#include "categoria.h"
+#include "contador.h"
 
 using namespace std;
-
-
-/*
-	Add: 
-		void Fila::moveParaTopo(Celula *q);
-
-	Consegui resolver as questões de emergência e ninguém caiu
-	Poucos vôos foram desviados.
-
-	O que falta fazer:
-		Padronizar as saídas
-		E mostrar as saídas que o carlinhos pediu para ter (tempo médio de espera, e etc...)
-
-
-*/
-
-
-
-
-
 
 //Função que printa no. do voo, cia e aeroporto
 void printaInformacoes (Aviao *a)
@@ -100,7 +98,7 @@ void verificandoCombustivel(Fila *p, int passoAtual)
 	Celula *q, *r;
 	q = p->ini->ante;
 	r = q->ante;
-	//Retirando os vôos emergenciais da pista p e colocando na pista pe ou enviando para outro aeroporto
+	//Retirando os vôos emergenciais da pista p e colocando no topo ou enviando para outro aeroporto
 	while (q != p->fim)
 	{	
 		if (q->aeronave->pouso)
@@ -139,7 +137,7 @@ void verificandoCombustivel(Fila *p, int passoAtual)
 	}
 }
 
-//Função que determina se vaii colocar no fim ou no início da fila
+//Função que determina se vai colocar no fim ou no início da fila
 void poeNaFila(Fila *p, Aviao *a)
 {
 	//se for emergencial põe no topo
@@ -153,7 +151,7 @@ void poeNaFila(Fila *p, Aviao *a)
 void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 {
 	int aleat;
-	if (a->pouso) //POUSO DONE
+	if (a->pouso && a->emergencia == 0) //POUSO
 	{
 		//Se o tempo de espera de p1 é menor que p2
 		if(3*(p1->tam) + p1->tempoEspera < 3*(p2->tam) + p2->tempoEspera)
@@ -203,7 +201,7 @@ void escolhendoPista(Fila *p1, Fila *p2, Fila *p3, Aviao *a)
 				delete a;
 			}
 		}
-	} else //DECOLAGEM DONE 
+	} else //DECOLAGEM & Emergência
 	{
 		//Se o tempo de espera das 3 pistas forem iguais aloco no na pista 3 que tem menor probabilidade de alocar voos
 		if (p3->tam + p3->tempoEspera == p2->tam + p2->tempoEspera && p3->tam + p3->tempoEspera == p1->tam + p1->tempoEspera){
@@ -293,7 +291,6 @@ void usoPista(Fila *p, int passoAtual, Contador *count)
 	a = nullptr;
 }
 
-
 int main()
 {
 	int tempo_de_simulacao;
@@ -332,11 +329,6 @@ int main()
 
 	//Construtor do contador das informações pedidas no ep
 	Contador count;
-
-	/* Considero cada passo de tempo de simulação seja equivalente a 6 minutos na vida real 
-	*  Tendo visto que no aeroporto de GRU, chega no máximo 1000 aviões em um dia
-	*  1000 aviões / 24 Horas =~ 41 aviões/Hora ==> 4 aviões/passo
- 	*/
 
 	while(i < tempo_de_simulacao)
 	{

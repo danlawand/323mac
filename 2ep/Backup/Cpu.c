@@ -12,11 +12,11 @@
   Nome: DANIEL ANGELO ESTEVES LAWAND
   NUSP: 10297693
 
-  Espera.c
+  Cpu.c
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
 
-#include "Espera.h"
+#include "Cpu.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -26,20 +26,25 @@
 static void *mallocSafe(size_t nbytes);
 
 /*Relativamente alterado*/
-Espera EsperaInit() {
-  Espera fila = mallocSafe(sizeof(*fila));
+CPU CPUInit() {
+  CPU fila = mallocSafe(sizeof(*fila));
   Link cabeca = mallocSafe(sizeof(*cabeca));
+  // for (int i = 0; i < 10; i++) {
+  //   fila->tempoPermanencia[i] = 0;
+  //   fila->quantidadePrioridades[i] = 0;
+  // }
   fila->cabeca = cabeca;
   fila->cabeca->next = cabeca;
   fila->cabeca->previous = cabeca;
   fila->n = 0;
+  fila->tempoDeProcesso = 0;
   fila->n_processosTerminados = 0;
   fila->sumPermanencia = 0;
   return fila;
 }
 
 /*Relativamente alterado*/
-void addProcessoEspera(Processo p, Espera fila) {
+void addProcessoCPU(Processo p, CPU fila) {
                                 /*Next     previous*/
   Link novo = newNodeCircular(p, fila->cabeca, fila->cabeca->previous);
   fila->cabeca->previous->next = novo;
@@ -47,9 +52,8 @@ void addProcessoEspera(Processo p, Espera fila) {
   fila->n++;
 }
 
-
 /*Relativamente alterado*/
-Processo retiraProcessoEspera(Espera fila) {
+Processo retiraProcessoCPU(CPU fila) {
   Link no;
   Processo p;
   if (fila->n == 0) {
@@ -65,7 +69,22 @@ Processo retiraProcessoEspera(Espera fila) {
   return p;
 }
 
-void imprimeEspera (Espera fila, int i) {
+/*Relativamente alterado*/
+void fim20UT(CPU fila) {
+  Link current;
+  /*Tirou da primeira posição*/
+  current = fila->cabeca->next;
+  fila->cabeca->next = current->next;
+  current->next->previous = fila->cabeca;
+
+  /*Coloca em último*/
+  current->next = fila->cabeca;
+  current->previous = fila->cabeca->previous;
+  fila->cabeca->previous->next = current;
+  fila->cabeca->previous = current;
+}
+
+void imprimeCPU (CPU fila, int i) {
   Link no;
   no = fila->cabeca->next;
   while(no != fila->cabeca) {
@@ -74,27 +93,40 @@ void imprimeEspera (Espera fila, int i) {
   }
 }
 
-int EsperaSize(Espera fila) {
+int CPUSize(CPU fila) {
   return fila->n;
 }
 
-bool EsperaIsEmpty(Espera fila) {
+bool CPUIsEmpty(CPU fila) {
   return fila->n == 0;
 }
 
-void incrementaProcessosTerminadosEspera(Espera fila) {
+void incrementaProcessosTerminadosCPU(CPU fila) {
   fila->n_processosTerminados++;
 }
 
-Processo processoAtualEspera(Espera fila) {
+Processo processoAtualCPU(CPU fila) {
   return fila->cabeca->next->processo;
 }
 
-void somatorioTempoPermanenciaEspera(Espera fila) {
-  fila->sumPermanencia += (fila->cabeca->next->processo->fimEspera - fila->cabeca->next->processo->inicioEspera);
+void somatorioTempoPermanenciaCPU(CPU fila) {
+  Processo processo = fila->cabeca->next;
+  fila->sumPermanencia += (processo->fimCPU - processo->inicioCPU);
+  // if (processo->numero >= 100) {
+  //   fila->sumPermanencia += (processo->fimCPU - processo->inicioCPU);
+  //   fila->tempoPermanencia[processo->prioridade] += (processo->fimCPU - processo->inicioCPU);
+  //   fila->quantidadePrioridades[processo->prioridade]++;
+  // }
 }
 
-void EsperaFree(Espera fila) {
+double mediaTempoPermanenciaCPU(CPU fila) {
+  if (fila->sumPermanencia == 0) {
+    return 0;
+  }
+  return ((double)fila->sumPermanencia) / ((double)fila->n_processosTerminados);
+}
+
+void CPUFree(CPU fila) {
   Link no, q;
   if (fila->n != 0) {
     no = fila->cabeca->next;

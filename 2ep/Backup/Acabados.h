@@ -15,17 +15,22 @@
   FilaLinear.h
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
-#ifndef _FILALINEAR_H
-#define _FILALINEAR_H
+#ifndef _ACABADOS_H
+#define _ACABADOS_H
 #include "Node.h"
 #include <stdio.h>
 #define bool int
 
-typedef struct sequenciaFila* Fila;
-struct sequenciaFila {
+typedef struct acabadosFila* Acabados;
+struct acabadosFila {
   No cabeca;
   No last;
-  No current;
+
+  /*Armazena o tempo de permanencia dos processos de cada prioridade*/
+  int tempoPermanencia[10];
+
+  /*Armazena quantos processos de cada prioridade passaram pela fila*/
+  int quantidadePrioridades[10];
 
   /*Armazena o tamanho*/
   int n;
@@ -38,36 +43,32 @@ struct sequenciaFila {
 };
 
 /*Construtor*/
-Fila filaLinearInit();
+Acabados acabadosInit();
 
 /*Adiciona Processo na Fila de Espera*/
-void addProcessoFilaLinear(Processo, Fila);
+void addProcessoAcabados(Processo, Acabados);
+
+double mediaTempoPermanenciaAcabados(Acabados);
 
 /*Adiciona No na Fila de Impressao ou na fila de processos Acabados*/
-void addNodeFilaLinear(No, Fila);
-
-void incrementaProcessosTerminadosLinear(Fila);
-
-void somatorioTempoPermanenciaLinear(Fila);
+// void addNodeAcabados(No, Acabados);
 
 /*Imprime a fila em determinado UT*/
-void imprimeFilaLinear(Fila, int);
+void imprimeAcabados(Acabados, int);
 
 /*Retorna o tamanho da Fila*/
-int filaSize(Fila);
+int acabadosSize(Acabados);
 
 /*Devolve true se a fila está vazia*/
-bool filaIsEmpty(Fila);
+bool acabadosIsEmpty(Acabados);
 
-/*Retira No da fila*/
-No retiraNodeFilaLinear(Fila);
+/*Retira No da fila de Impressao*/
+// No retiraNodeAcabados(Acabados);
 
-/*Retira Processo da fila*/
-Processo retiraProcessoEspera(Fila);
-
-Processo processoAtualEspera(Fila);
+// /*Funcao que calcula a razao media e os tempos medios de Permanência em cada fila*/
+// void mediasFinais(Acabados, double*, double*, double*, double*);
 
 /*Destrutor*/
-void filaFree();
+void acabadosFree();
 
 #endif

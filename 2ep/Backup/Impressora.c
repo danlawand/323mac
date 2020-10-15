@@ -33,11 +33,10 @@ static void *mallocSafe(size_t nbytes);
 Impressora impressoraInit() {
   Impressora fila = mallocSafe(sizeof(*fila));
   No cabeca = mallocSafe(sizeof(*cabeca));
-  for (int i = 0; i < 10; i++) {
-    fila->tempoPermanencia[i] = 0;
-    fila->quantidadePrioridades[i] = 0;
-  }
-  fila->maiores100 = 0;
+  // for (int i = 0; i < 10; i++) {
+  //   fila->tempoPermanencia[i] = 0;
+  //   fila->quantidadePrioridades[i] = 0;
+  // }
   fila->cabeca = cabeca;
   fila->cabeca->next = NULL;
   fila->primeiro = cabeca;
@@ -64,6 +63,14 @@ void addProcessoImpressora(Processo p, Impressora fila) {
   }
 }
 
+// void addNodeImpressora(No no, Impressora fila) {
+//   // fila->totalLinhas += no->processo.linhas;
+//   fila->last->next = no;
+//   no->next = NULL;
+//   fila->last = no;
+//   fila->n++;
+// }
+
 void imprimeImpressora(Impressora fila, int i) {
   No no;
   no = fila->cabeca->next;
@@ -87,33 +94,33 @@ void incrementaProcessosTerminadosImpressora(Impressora fila) {
 }
 
 void somatorioTempoPermanenciaImpressora(Impressora fila, Processo processo) {
-  if (processo->tempoInicial >= 100) {
-    fila->maiores100++;
-    fila->sumPermanencia += (processo->fimImpressao - processo->inicioImpressao);
-    fila->tempoPermanencia[processo->prioridade] += (processo->fimImpressao - processo->inicioImpressao);
-    fila->quantidadePrioridades[processo->prioridade]++;
-    }
+  fila->sumPermanencia += (processo->fimImpressao - processo->inicioImpressao);
+  // if (processo->numero >= 100) {
+  //     fila->sumPermanencia += (processo->fimImpressao - processo->inicioImpressao);
+  //     fila->tempoPermanencia[processo->prioridade] += (processo->fimImpressao - processo->inicioImpressao);
+  //     fila->quantidadePrioridades[processo->prioridade]++;
+  //   }
 }
 
 double mediaTempoPermanenciaImpressora(Impressora fila) {
   if (fila->sumPermanencia == 0) {
     return 0;
   }
-  double divisor, dividendo;
-  dividendo = (double)fila->sumPermanencia;
-  divisor = (double)fila->maiores100;
-  return dividendo/divisor;
+  return ((double)fila->sumPermanencia) / ((double)fila->n_processosTerminados);
 }
 
-double mediaPrioridadesImpressora(Impressora fila, int k) {
-  double divisor, dividendo;
-  if (fila->tempoPermanencia[k] == 0) {
-    return 0;
-  }
-  dividendo = (double)fila->tempoPermanencia[k];
-  divisor = (double)fila->quantidadePrioridades[k];
-  return dividendo/divisor;
-}
+// No retiraNodeImpressora(Impressora fila) {
+//   No no;
+//   if (fila->n == 0) {
+//     return NULL;
+//   }
+//   no = fila->cabeca->next;
+//   fila->cabeca->next = no->next;
+//   fila->n--;
+//   fila->n_processosTerminados++;
+//   return no;
+// }
+
 
 
 Processo retiraPrimeiroProcessoImpressora(Impressora fila) {
@@ -148,6 +155,7 @@ Processo retiraPrimeiroProcessoImpressora(Impressora fila) {
       fila->primeiro = fila->cabeca;
     }
   }
+  free(no);
   fila->n--;
   fila->n_processosTerminados++;
   return p;
@@ -185,6 +193,7 @@ Processo retiraSegundoProcessoImpressora(Impressora fila) {
       fila->segundo = fila->cabeca;
     }
   }
+  free(no);
   fila->n--;
   fila->n_processosTerminados++;
   return p;
@@ -222,6 +231,7 @@ Processo retiraTerceiroProcessoImpressora(Impressora fila) {
       fila->terceiro = fila->cabeca;
     }
   }
+  free(no);
   fila->n--;
   fila->n_processosTerminados++;
   return p;

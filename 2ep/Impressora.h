@@ -26,6 +26,13 @@ struct impressoraFila {
   No cabeca;
   No last;
 
+  /*Armazena o tempo de permanencia dos processos de cada prioridade*/
+  int tempoPermanencia[10];
+
+  /*Armazena quantos processos de cada prioridade passaram pela fila*/
+  int quantidadePrioridades[10];
+
+  int maiores100;
   /*Armazena o tamanho*/
   int n;
 
@@ -62,8 +69,8 @@ void incrementaProcessosTerminadosImpressora(Impressora);
 
 void somatorioTempoPermanenciaImpressora(Impressora, Processo);
 
-/*Retira No da fila de Impressao*/
-// No retiraNodeImpressora(Impressora);
+double mediaTempoPermanenciaImpressora(Impressora);
+
 
 /*Retira No da fila de Impressao*/
 Processo retiraPrimeiroProcessoImpressora(Impressora);
@@ -83,6 +90,8 @@ Processo primeiroImpressora(Impressora);
 Processo segundoImpressora(Impressora);
 
 Processo terceiroImpressora(Impressora);
+
+double mediaPrioridadesImpressora(Impressora, int);
 
 
 /*Destrutor*/

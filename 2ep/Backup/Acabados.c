@@ -16,7 +16,7 @@
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
 
-#include "FilaLinear.h"
+#include "Acabados.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -25,9 +25,13 @@
 /* Protótipo de rotinas auxiliares */
 static void *mallocSafe(size_t nbytes);
 
-Fila filaLinearInit() {
-  Fila fila = mallocSafe(sizeof(*fila));
+Acabados acabadosInit() {
+  Acabados fila = mallocSafe(sizeof(*fila));
   No cabeca = mallocSafe(sizeof(*cabeca));
+  // for (int i = 0; i < 10; i++) {
+  //   fila->tempoPermanencia[i] = 0;
+  //   fila->quantidadePrioridades[i] = 0;
+  // }
   fila->cabeca = cabeca;
   fila->cabeca->next = NULL;
   fila->last = cabeca;
@@ -37,21 +41,36 @@ Fila filaLinearInit() {
   return fila;
 }
 
-void addProcessoFilaLinear(Processo p, Fila fila) {
-  No no = newNodeLinear(p, NULL);
+void addProcessoAcabados(Processo processo, Acabados fila) {
+  // if (processo->numero >= 100) {
+  //   fila->sumPermanencia += (processo->tempoFinal - processo->tempoInicial);
+  //   fila->tempoPermanencia[processo->prioridade] += (processo->tempoFinal - processo->tempoInicial);
+  //   fila->quantidadePrioridades[processo->prioridade]++;
+  // }
+  No no = newNodeLinear(processo, NULL);
   fila->last->next = no;
   fila->last = no;
   fila->n++;
 }
 
-void addNodeFilaLinear(No no, Fila fila) {
-  fila->last->next = no;
-  no->next = NULL;
-  fila->last = no;
-  fila->n++;
+double mediaTempoPermanenciaAcabados(Acabados fila) {
+  if (fila->sumPermanencia == 0) {
+    return 0;
+  }
+  return ((double)fila->sumPermanencia) / ((double)fila->n_processosTerminados);
 }
 
-void imprimeFilaLinear (Fila fila, int i) {
+// void addNodeAcabados(No no, Acabados fila) {
+//   fila->sumPermanencia += (no->processo->tempoFinal - no->processo->tempoInicial);
+//   fila->last->next = no;
+//   no->next = NULL;
+//   fila->last = no;
+//   fila->n++;
+//
+// }
+
+
+void imprimeAcabados (Acabados fila, int i) {
   No no;
   no = fila->cabeca->next;
   while(no != NULL) {
@@ -60,56 +79,21 @@ void imprimeFilaLinear (Fila fila, int i) {
   }
 }
 
-int filaSize(Fila fila) {
+int acabadosSize(Acabados fila) {
   return fila->n;
 }
 
-bool filaIsEmpty(Fila fila) {
+bool acabadosIsEmpty(Acabados fila) {
   return fila->n == 0;
 }
 
-void incrementaProcessosTerminadosLinear(Fila fila) {
-  fila->n_processosTerminados++;
-}
-
-void somatorioTempoPermanenciaLinear(Fila fila) {
-  fila->sumPermanencia += (fila->cabeca->next->processo->fimEspera - fila->cabeca->next->processo->inicioEspera);
-}
-
-No retiraNodeFilaLinear(Fila fila) {
-  No no;
-  if (fila->n == 0) {
-    return NULL;
-  }
-  if (fila->last == fila->cabeca->next) {
-    fila->last = fila->cabeca;
-  }
-  no = fila->cabeca->next;
-  fila->cabeca->next = no->next;
-  fila->n--;
-  fila->n_processosTerminados++;
-  return no;
-}
-
-Processo retiraProcessoEspera(Fila fila) {
-  No q = fila->cabeca->next;
-  /*Sera que a proxima linha funciona?*/
-  Processo p = q->processo;
-  fila->cabeca->next = fila->cabeca->next->next;
-  freeNodeLinear(q);
-  return p;
-}
-
-Processo processoAtualEspera(Fila fila) {
-  return fila->cabeca->next->processo;
-}
-
-void filaFree(Fila fila) {
+void acabadosFree(Acabados fila) {
   No no, q;
   if (fila->n != 0) {
     no = fila->cabeca->next;
     while(no != NULL) {
       q = no->next;
+      freeProcesso(no->processo);
       freeNodeLinear(no);
       no = q;
     }
@@ -118,6 +102,7 @@ void filaFree(Fila fila) {
   free(no);
   free(fila);
 }
+
 /* Implementação das rotinas auxiliares */
 static void *mallocSafe(size_t nbytes) {
   void *p = malloc(nbytes);

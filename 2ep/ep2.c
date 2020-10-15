@@ -24,28 +24,27 @@
 #include "Impressora.h"
 #include "Acabados.h"
 
+
 int main(int argc, char *argv[]) {
   CPU cpu = CPUInit();
   Espera espera = EsperaInit(); /*Fazer fila linear para o início da espera*/
   Acabados acabados = acabadosInit();
   Impressora impressora = impressoraInit();
   int seed = 7;
-  int tempoSimulacao = 10000;
+  int tempoSimulacao = 1000;
   int novoProcesso, procID = 1;
   int tempoDeProcessamento, lines, tempoInicial, prioridade;
   int alterna = 0;
-  double mediaImpressora, mediaCPU, mediaEspera,razaoFinal;
   char tipoSaida;
   Processo p;
   int i = 0;
-  Link no;
   srand(seed);
 
 
-  // printf("Digite o tempo de Simulação: ");
-  // scanf("%d", &tempoSimulacao);
-  // printf("Saída (c)ompleta ou (s)implificada? ");
-  // scanf(" %c", &tipoSaida);
+  printf("Digite o tempo de Simulação: ");
+  scanf("%d", &tempoSimulacao);
+  printf("Saída (c)ompleta ou (s)implificada? ");
+  scanf(" %c", &tipoSaida);
 
   while (tempoSimulacao > i) {
 
@@ -118,14 +117,15 @@ int main(int argc, char *argv[]) {
         if (getLinhas(processoAtualCPU(cpu)) > 0) {
           setTempoFinalCPU(processoAtualCPU(cpu), i);
           setInicioImpressao(processoAtualCPU(cpu), i);
-          somatorioTempoPermanenciaCPU(cpu);
           p = retiraProcessoCPU(cpu);
+          somatorioTempoPermanenciaCPU(cpu, p);
           addProcessoImpressora(p, impressora);
         } else {
           setTempoFinalCPU(processoAtualCPU(cpu), i);
+          setTempoFinal(processoAtualCPU(cpu), i);
           setInicioImpressao(processoAtualCPU(cpu), i);
-          somatorioTempoPermanenciaCPU(cpu);
           p = retiraProcessoCPU(cpu);
+          somatorioTempoPermanenciaCPU(cpu, p);
           imprimeProcessoTermino(p);
           addProcessoAcabados(p, acabados);
         }
@@ -151,17 +151,17 @@ int main(int argc, char *argv[]) {
       p = retiraProcessoEspera(espera, alterna);
       alterna++;
       incrementaProcessosTerminadosEspera(espera);
-      somatorioTempoPermanenciaEspera(espera, p);
       setTempoFinalEspera(p, i);
+      somatorioTempoPermanenciaEspera(espera, p);
       /*Envia para CPU*/
       setTempoInicioCPU(p, i);
       addProcessoCPU(p, cpu);
     }
 /******Novo Processo***********************************/
-    printf("Tempo Atual: %d\n", i);
+
     novoProcesso = (rand() % 100);
     if (novoProcesso <= 5) {
-      tempoDeProcessamento = (rand() % 60+ 1);
+      tempoDeProcessamento = (rand() % 60 + 1);
       lines = (rand() % 501);
       prioridade = (rand() % 10);
       tempoInicial = i;
@@ -178,46 +178,46 @@ int main(int argc, char *argv[]) {
       imprimeNovoProcesso(p);
     }
 
-    // /*Impressão das Filas*/
-    // if (tipoSaida == 'c') {
-    //   /*Imprime filas*/
-    //   printf("\n\nFila De Espera\n");
-    //   printf("Tamanho da Fila de Espera: %d\n\n", filaSize(espera));
-    //   imprimeFila(espera, i);
-    //   printf("\n\nFila da CPU\n");
-    //   printf("Tamanho da Fila da CPU: %d\n\n", filaSize(cpu));
-    //   imprimeFila(cpu, i);
-    //   printf("\n\nFila da Impressora 1\n");
-    //   printf("Tamanho da Fila da Impressora 1: %d\n\n", filaSize(impressora1));
-    //   imprimeFila(impressora1, i);
-    //   printf("\n\nFila da Impressora 2\n");
-    //   printf("Tamanho da Fila da Impressora 2: %d\n\n", filaSize(impressora2));
-    //   imprimeFila(impressora2, i);
-    //   printf("\n\nFila da Impressora 3\n");
-    //   printf("Tamanho da Fila da Impressora 3: %d\n\n", filaSize(impressora3));
-    //   imprimeFila(impressora3, i);
-    // }
+    /*Impressão das Filas*/
+    if (tipoSaida == 'c') {
+      /*Imprime filas*/
+      printf("\n\nFila De Espera\n");
+      printf("Tamanho da Fila de Espera: %d\n\n", EsperaSize(espera));
+      imprimeEspera(espera, i);
+      printf("\n\nFila da CPU\n");
+      printf("Tamanho da Fila da CPU: %d\n\n", CPUSize(cpu));
+      imprimeCPU(cpu, i);
+      printf("\n\nFila da Impressora\n");
+      printf("Tamanho da Fila da Impressora 1: %d\n\n", impressoraSize(impressora));
+      imprimeImpressora(impressora, i);
+    }
     i++;
   }
-  printf("--------------CPU--------------\n");
-  imprimeCPU(cpu, i);
-  printf("--------------ESPERA--------------\n");
-  imprimeEspera(espera, i);
-
-  printf("--------------Impressora--------------\n");
-  imprimeImpressora(impressora, i);
-
-  printf("--------------ACABADOS--------------\n");
-  imprimeAcabados(acabados, i);
-  // printf("Total de Processos Executados: %d\n", filaSize(acabados));
-  // printf("Tempo Médio de Permanência no Sistema por Processo: %.2f\n", (double)(acabados->sumPermanencia/(double)filaSize(acabados)));
-  // /*Funcao que calcula a razao media e os tempos medios de Permanência em cada fila*/
-  // mediasFinais(acabados, &mediaEspera, &mediaCPU, &mediaImpressora, &razaoFinal);
-  // printf("Tempo Médio de Permanência na Fila de Espera: %.2f\n", mediaEspera);
-  // printf("Tempo Médio de Permanência na Fila da CPU: %.2f\n", mediaCPU);
-  // printf("Tempo Médio de Permanência nas Filas de Impressão: %.2f\n",mediaImpressora);
-  // printf("Média da Razão do Tempo de Processamento pelo Tempo de Permanência dos Processos Executados: %f\n", razaoFinal);
-
+  printf("Total de Processos Gerados: %d\n", procID-1);
+  printf("Total de Processos Concluídos: %d\n", acabadosSize(acabados));
+  printf("Número de Processos remanescentes na Fila de Espera: %d\n", EsperaSize(espera));
+  printf("Número de Processos remanescentes na CPU: %d\n", CPUSize(cpu));
+  printf("Número de Processos remanescentes na Fila de Impressão: %d\n", impressoraSize(impressora));
+  printf("Tempo Médio de Permanência na Fila de Espera: %.2f\n", mediaTempoPermanenciaEspera(espera));
+  printf("Tempo Médio de Permanência na Fila da CPU: %.2f\n", mediaTempoPermanenciaCPU(cpu));
+  printf("Tempo Médio de Permanência nas Filas de Impressão: %.2f\n",mediaTempoPermanenciaImpressora(impressora));
+  printf("Tempo Médio de Permanência no Sistema: %f\n", mediaTempoPermanenciaAcabados(acabados));
+  printf("Média da Razão do Tempo de Processamento pelo Tempo de Permanência dos Processos Concluídos: %f\n", mediaRazao(acabados));
+  for (int k = 0; k < 10; k++) {
+    printf("Número de Processos de Prioridade %d: %d\n", k, sizePrioridade(espera, k));
+  }
+  for (int k = 0; k < 10; k++) {
+    printf("Tempo Médio de Permanência na Fila de Espera de Processos de Prioridade %d: %f\n", k, mediaPrioridadesEspera(espera, k));
+  }
+  for (int k = 0; k < 10; k++) {
+    printf("Tempo Médio de Permanência na Fila da CPU de Processos de Prioridade %d: %f\n", k, mediaPrioridadesCPU(cpu, k));
+  }
+  for (int k = 0; k < 10; k++) {
+    printf("Tempo Médio de Permanência na Fila de Impressao de Processos de Prioridade %d: %f\n", k, mediaPrioridadesImpressora(impressora, k));
+  }
+  for (int k = 0; k < 10; k++) {
+    printf("Tempo Médio de Permanência no Sistema de Processos de Prioridade %d: %f\n", k, mediaPrioridadesAcabados(acabados, k));
+  }
   CPUFree(cpu);
   EsperaFree(espera);
   impressaoFree(impressora);

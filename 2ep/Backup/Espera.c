@@ -28,6 +28,10 @@ static void *mallocSafe(size_t nbytes);
 Espera EsperaInit() {
   Espera fila = mallocSafe(sizeof(*fila));
   Link cabeca = mallocSafe(sizeof(*cabeca));
+  // for (int i = 0; i < 10; i++) {
+  //   fila->tempoPermanencia[i] = 0;
+  //   fila->quantidadePrioridades[i] = 0;
+  // }
   MaxPQInit();
   fila->cabeca = cabeca;
   fila->cabeca->next = cabeca;
@@ -117,6 +121,19 @@ int posicaoProcessoAtual(Espera fila) {
 
 void somatorioTempoPermanenciaEspera(Espera fila, Processo processo) {
   fila->sumPermanencia += (processo->fimEspera - processo->inicioEspera);
+  //
+  // if (processo->numero >= 100) {
+  //     fila->sumPermanencia += (processo->fimEspera - processo->inicioEspera);
+  //     fila->tempoPermanencia[processo->prioridade] += (processo->fimEspera - processo->inicioEspera);
+  //     fila->quantidadePrioridades[processo->prioridade]++;
+  // }
+}
+
+double mediaTempoPermanenciaEspera(Espera fila) {
+  if (fila->sumPermanencia == 0) {
+    return 0;
+  }
+  return ((double)fila->sumPermanencia) / ((double)fila->n_processosTerminados);
 }
 
 void EsperaFree(Espera fila) {

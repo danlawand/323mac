@@ -12,22 +12,31 @@
   Nome: DANIEL ANGELO ESTEVES LAWAND
   NUSP: 10297693
 
-  Espera.h
+  Cpu.h
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
-#ifndef _Espera_H
-#define _Espera_H
+#ifndef _CPU_H
+#define _CPU_H
 #include "Node.h"
 #include <stdio.h>
 #define bool int
 
-typedef struct EsperaFila* Espera;
-struct EsperaFila {
+typedef struct circularFila* CPU;
+struct circularFila {
   Link cabeca;
   Link last;
 
+  /*Armazena o tempo de permanencia dos processos de cada prioridade*/
+  int tempoPermanencia[10];
+
+  /*Armazena quantos processos de cada prioridade passaram pela fila*/
+  int quantidadePrioridades[10];
+
   /*Armazena o tamanho*/
   int n;
+
+  /*Armazena o tempo de execução na cpu, para depois verficiar se excedeu as 20 UT na execução do processo*/
+  int tempoDeProcesso;
 
   /*Numero de processos terminados naquela fila*/
   int n_processosTerminados;
@@ -37,31 +46,44 @@ struct EsperaFila {
 };
 
 /*Construtor*/
-Espera EsperaInit();
+CPU CPUInit();
 
-/*Adiciona Processo na Fila da Espera*/
-void addProcessoEspera(Processo, Espera);
+/*Adiciona Processo na Fila da CPU*/
+void addProcessoCPU(Processo, CPU);
 
-Processo retiraProcessoEspera(Espera);
+/*Adiciona Link na Fila CPU*/
+// void addNodeCPU(Link, CPU);
+
+/*Retira processo da fila da CPU*/
+// Link retiraNodeCPU(CPU);
+
+Processo retiraProcessoCPU(CPU);
+
+
+/*Manda o processo para o fim da fila CPU*/
+void fim20UT(CPU);
+
 
 /*Imprime a fila em determinado UT*/
-void imprimeEspera(Espera, int);
+void imprimeCPU(CPU, int);
 
 /*Retorna o tamanho da Fila*/
-int EsperaSize(Espera);
+int CPUSize(CPU);
 
 /*Devolve true se a fila está vazia*/
-bool EsperaIsEmpty(Espera);
+bool CPUIsEmpty(CPU);
 
 
 /*Contador de Processos Terminados na Fila em questão*/
-void incrementaProcessosTerminadosEspera(Espera);
+void incrementaProcessosTerminadosCPU(CPU);
 
-Processo processoAtualEspera(Espera);
+Processo processoAtualCPU(CPU);
 
-void somatorioTempoPermanenciaEspera(Espera);
+void somatorioTempoPermanenciaCPU(CPU);//, Processo);
+
+double mediaTempoPermanenciaCPU(CPU);
 
 /*Destrutor*/
-void EsperaFree();
+void CPUFree();
 
 #endif

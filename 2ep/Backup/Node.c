@@ -15,13 +15,25 @@
   Node.c
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
-#include "NodeCircular.h"
+#include "Node.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 /* Protótipo de rotinas auxiliares */
 
 static void *mallocSafe(size_t nbytes);
+
+No newNodeLinear (Processo processo, No next) {
+  No q = mallocSafe(sizeof(*q));
+  q->processo = processo;
+  q->next = next;
+  return q;
+}
+
+void freeNodeLinear (No q) {
+  q->next = NULL;
+  free(q);
+}
 
 Link newNodeCircular (Processo processo, Link next, Link previous) {
   Link q = mallocSafe(sizeof(*q));
@@ -36,6 +48,7 @@ void freeNodeCircular (Link q) {
   q->previous = NULL;
   free(q);
 }
+
 
 /* Implementação das rotinas auxiliares */
 

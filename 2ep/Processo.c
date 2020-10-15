@@ -58,7 +58,7 @@ void imprimeProcessoTermino(Processo processo) {
 }
 
 void imprimeNovoProcesso(Processo processo) {
-  printf("Processo Nº: %d\n", processo->numero);
+  printf("Novo Processo Nº: %d\n", processo->numero);
   printf("Prioridade: %d\n", processo->prioridade);
   printf("Tempo de Processamento Inicial: %d\n", processo->tempoDeProcessamentoInicial);
   printf("Linhas Iniciais: %d\n", processo->linhasIniciais);
@@ -127,10 +127,10 @@ int getLinhas(Processo p) {
 
 void decresceLinhas(Processo processo) {
   /*Altera a quantidade de linhas do processo atual*/
-  if (processo->linhas < 10) {
+  if (processo->linhas < 2) {
     processo->linhas = 0;
   } else {
-    processo->linhas-=10;
+    processo->linhas-=2;
   }
 }
 

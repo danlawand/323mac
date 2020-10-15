@@ -12,17 +12,17 @@
   Nome: DANIEL ANGELO ESTEVES LAWAND
   NUSP: 10297693
 
-  FilaLinear.h
+  Impressora.h
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
-#ifndef _ACABADOS_H
-#define _ACABADOS_H
+#ifndef _IMPRESSORA_H
+#define _IMPRESSORA_H
 #include "Node.h"
 #include <stdio.h>
 #define bool int
 
-typedef struct acabadosFila* Acabados;
-struct acabadosFila {
+typedef struct impressoraFila* Impressora;
+struct impressoraFila {
   No cabeca;
   No last;
 
@@ -32,12 +32,12 @@ struct acabadosFila {
   /*Armazena quantos processos de cada prioridade passaram pela fila*/
   int quantidadePrioridades[10];
 
-  int maiores100;
-
-  double razaoPerm;
-
   /*Armazena o tamanho*/
   int n;
+
+  No primeiro;
+  No segundo;
+  No terceiro;
 
   /*Numero de processos terminados naquela fila*/
   int n_processosTerminados;
@@ -47,27 +47,53 @@ struct acabadosFila {
 };
 
 /*Construtor*/
-Acabados acabadosInit();
+Impressora impressoraInit();
 
-/*Adiciona Processo na Fila de Espera*/
-void addProcessoAcabados(Processo, Acabados);
+/*Adiciona Processo na Impressora*/
+void addProcessoImpressora(Processo, Impressora);
 
-double mediaTempoPermanenciaAcabados(Acabados);
-
-double mediaRazao(Acabados);
-
-double mediaPrioridadesAcabados(Acabados, int);
+/*Adiciona No na Fila de Impressao*/
+// void addNodeImpressora(No, Impressora);
 
 /*Imprime a fila em determinado UT*/
-void imprimeAcabados(Acabados, int);
+void imprimeImpressora(Impressora, int);
 
 /*Retorna o tamanho da Fila*/
-int acabadosSize(Acabados);
+int impressoraSize(Impressora);
 
 /*Devolve true se a fila está vazia*/
-bool acabadosIsEmpty(Acabados);
+bool impressoraIsEmpty(Impressora);
+
+void incrementaProcessosTerminadosImpressora(Impressora);
+
+void somatorioTempoPermanenciaImpressora(Impressora, Processo);
+
+double mediaTempoPermanenciaImpressora(Impressora);
+
+/*Retira No da fila de Impressao*/
+// No retiraNodeImpressora(Impressora);
+
+/*Retira No da fila de Impressao*/
+Processo retiraPrimeiroProcessoImpressora(Impressora);
+
+Processo retiraSegundoProcessoImpressora(Impressora);
+
+Processo retiraTerceiroProcessoImpressora(Impressora);
+
+bool primeiroVazio(Impressora);
+
+bool segundoVazio(Impressora);
+
+bool terceiroVazio(Impressora);
+
+Processo primeiroImpressora(Impressora);
+
+Processo segundoImpressora(Impressora);
+
+Processo terceiroImpressora(Impressora);
+
 
 /*Destrutor*/
-void acabadosFree();
+void impressaoFree();
 
 #endif

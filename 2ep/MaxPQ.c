@@ -51,8 +51,6 @@ Link getMaxPQMax() {
 
 
 Link getMaxPQMeio(int p) {
-  // Link no = pq[p];
-  // print(no->processo);
   Link node = pq[p];
   pq[p] = pq[--n];
   sink(p);
@@ -64,7 +62,6 @@ Link getMaxPQMeio(int p) {
 }
 
 void MaxPQDelMax() {
-  Link node = pq[0];
   pq[0] = pq[--n];
   sink(0);
 
@@ -75,7 +72,6 @@ void MaxPQDelMax() {
 
 
 void MaxPQDelMeio(int p) {
-  Link node = pq[p];
   pq[p] = pq[--n];
   sink(p);
 

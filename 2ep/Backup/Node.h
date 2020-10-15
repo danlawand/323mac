@@ -15,7 +15,21 @@
   Node.h
 
   \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
+#ifndef _NODE_H
+#define _NODE_H
 #include "Processo.h"
+
+typedef struct queueNode *No;
+struct queueNode {
+  Processo processo;
+  No next;
+};
+
+/*Cria Node da Fila Circular*/
+No newNodeLinear (Processo, No);
+
+void freeNodeLinear(No);
+
 
 typedef struct circularNode *Link;
 struct circularNode {
@@ -28,3 +42,5 @@ struct circularNode {
 Link newNodeCircular (Processo, Link, Link);
 
 void freeNodeCircular (Link);
+
+#endif

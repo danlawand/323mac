@@ -26,6 +26,15 @@ struct circularFila {
   Link cabeca;
   Link last;
 
+  /*Armazena o tempo de permanencia dos processos de cada prioridade*/
+  int tempoPermanencia[10];
+
+  /*Armazena quantos processos de cada prioridade passaram pela fila*/
+  int quantidadePrioridades[10];
+
+  int maiores100;
+
+
   /*Armazena o tamanho*/
   int n;
 
@@ -73,7 +82,12 @@ void incrementaProcessosTerminadosCPU(CPU);
 
 Processo processoAtualCPU(CPU);
 
-void somatorioTempoPermanenciaCPU(CPU);
+void somatorioTempoPermanenciaCPU(CPU, Processo);
+
+double mediaTempoPermanenciaCPU(CPU);
+
+double mediaPrioridadesCPU(CPU, int);
+
 /*Destrutor*/
 void CPUFree();
 

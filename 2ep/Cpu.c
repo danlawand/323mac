@@ -29,6 +29,11 @@ static void *mallocSafe(size_t nbytes);
 CPU CPUInit() {
   CPU fila = mallocSafe(sizeof(*fila));
   Link cabeca = mallocSafe(sizeof(*cabeca));
+  for (int i = 0; i < 10; i++) {
+    fila->tempoPermanencia[i] = 0;
+    fila->quantidadePrioridades[i] = 0;
+  }
+  fila->maiores100 = 0;
   fila->cabeca = cabeca;
   fila->cabeca->next = cabeca;
   fila->cabeca->previous = cabeca;
@@ -47,29 +52,6 @@ void addProcessoCPU(Processo p, CPU fila) {
   fila->cabeca->previous = novo;
   fila->n++;
 }
-
-// /*Relativamente alterado*/
-// void addNodeCPU(Link no, CPU fila) {
-//   fila->cabeca->previous->next = no;
-//   no->previous = fila->cabeca->previous;
-//   no->next = fila->cabeca;
-//   fila->cabeca->previous = no;
-//   fila->n++;
-// }
-
-// /*Relativamente alterado*/
-// Link retiraNodeCPU(CPU fila) {
-//   Link no;
-//   if (fila->n == 0) {
-//     return NULL;
-//   }
-//   no = fila->cabeca->next;
-//   fila->cabeca->next = no->next;
-//   no->next->previous = fila->cabeca;
-//   fila->n--;
-//   fila->n_processosTerminados++;
-//   return no;
-// }
 
 /*Relativamente alterado*/
 Processo retiraProcessoCPU(CPU fila) {
@@ -128,9 +110,36 @@ Processo processoAtualCPU(CPU fila) {
   return fila->cabeca->next->processo;
 }
 
-void somatorioTempoPermanenciaCPU(CPU fila) {
-  fila->sumPermanencia += (fila->cabeca->next->processo->fimEspera - fila->cabeca->next->processo->inicioEspera);
+void somatorioTempoPermanenciaCPU(CPU fila, Processo processo) {
+  if (processo->tempoInicial >= 100) {
+    fila->maiores100++;
+    fila->sumPermanencia += (processo->fimCPU - processo->inicioCPU);
+    fila->tempoPermanencia[processo->prioridade] += (processo->fimCPU - processo->inicioCPU);
+    fila->quantidadePrioridades[processo->prioridade]++;
+  }
 }
+
+double mediaTempoPermanenciaCPU(CPU fila) {
+  if (fila->sumPermanencia == 0) {
+    return 0;
+  }
+  double divisor, dividendo;
+  dividendo = (double)fila->sumPermanencia;
+  divisor = (double)fila->maiores100;
+  return dividendo/divisor;
+}
+
+
+double mediaPrioridadesCPU(CPU fila, int k) {
+  double divisor, dividendo;
+  if (fila->tempoPermanencia[k] == 0) {
+    return 0;
+  }
+  dividendo = (double)fila->tempoPermanencia[k];
+  divisor = (double)fila->quantidadePrioridades[k];
+  return dividendo/divisor;
+}
+
 
 void CPUFree(CPU fila) {
   Link no, q;

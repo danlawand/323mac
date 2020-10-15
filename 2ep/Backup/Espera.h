@@ -26,6 +26,12 @@ struct EsperaFila {
   Link cabeca;
   Link last;
 
+  /*Armazena o tempo de permanencia dos processos de cada prioridade*/
+  int tempoPermanencia[10];
+
+  /*Armazena quantos processos de cada prioridade passaram pela fila*/
+  int quantidadePrioridades[10];
+
   /*Armazena o tamanho*/
   int n;
 
@@ -67,6 +73,7 @@ int posicaoProcessoAtual(Espera);
 
 void somatorioTempoPermanenciaEspera(Espera, Processo);
 
+double mediaTempoPermanenciaEspera(Espera);
 /*Destrutor*/
 void EsperaFree();
 

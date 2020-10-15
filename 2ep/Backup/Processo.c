@@ -1,3 +1,20 @@
+/*\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__
+
+  AO PREENCHER ESSE CABEÇALHO COM O MEU NOME E O MEU NÚMERO USP,
+  DECLARO QUE SOU O ÚNICO AUTOR E RESPONSÁVEL POR ESSE PROGRAMA.
+  TODAS AS PARTES ORIGINAIS DESSE EXERCÍCIO PROGRAMA (EP) FORAM
+  DESENVOLVIDAS E IMPLEMENTADAS POR MIM SEGUINDO AS INSTRUÇÕES DESSE EP
+  E QUE PORTANTO NÃO CONSTITUEM PLÁGIO. DECLARO TAMBÉM QUE SOU RESPONSÁVEL
+  POR TODAS AS CÓPIAS DESSE PROGRAMA E QUE EU NÃO DISTRIBUI OU FACILITEI A
+  SUA DISTRIBUIÇÃO. ESTOU CIENTE QUE OS CASOS DE PLÁGIO SÃO PUNIDOS COM
+  REPROVAÇÃO DIRETA NA DISCIPLINA.
+
+  Nome: DANIEL ANGELO ESTEVES LAWAND
+  NUSP: 10297693
+
+  Processo.c
+
+  \__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__\__*/
 #include "Processo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,12 +58,11 @@ void imprimeProcessoTermino(Processo processo) {
 }
 
 void imprimeNovoProcesso(Processo processo) {
-  printf("Processo Nº: %d --- ", processo->numero);
-  printf("Prioridade: %d --- ", processo->prioridade);
-  // printf("Tempo de Processamento Inicial: %d\n", processo->tempoDeProcessamentoInicial);
-  // printf("Linhas Iniciais: %d\n", processo->linhasIniciais);
-  printf("Tempo de Chegada: %d --- ", processo->tempoInicial);
-  printf("Posicao: %d\n", processo->posicao);
+  printf("Processo Nº: %d\n", processo->numero);
+  printf("Prioridade: %d\n", processo->prioridade);
+  printf("Tempo de Processamento Inicial: %d\n", processo->tempoDeProcessamentoInicial);
+  printf("Linhas Iniciais: %d\n", processo->linhasIniciais);
+  printf("Tempo de Chegada: %d\n", processo->tempoInicial);
 }
 
 void imprimeProcesso(Processo processo, int i) {
@@ -111,10 +127,10 @@ int getLinhas(Processo p) {
 
 void decresceLinhas(Processo processo) {
   /*Altera a quantidade de linhas do processo atual*/
-  if (processo->linhas < 10) {
+  if (processo->linhas < 2) {
     processo->linhas = 0;
   } else {
-    processo->linhas-=10;
+    processo->linhas-=2;
   }
 }
 

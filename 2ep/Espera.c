@@ -28,6 +28,12 @@ static void *mallocSafe(size_t nbytes);
 Espera EsperaInit() {
   Espera fila = mallocSafe(sizeof(*fila));
   Link cabeca = mallocSafe(sizeof(*cabeca));
+  for (int i = 0; i < 10; i++) {
+    fila->tempoPermanencia[i] = 0;
+    fila->quantidadePrioridades[i] = 0;
+    fila->quantidadePrioridades100[i] = 0;
+  }
+  fila->maiores100 = 0;
   MaxPQInit();
   fila->cabeca = cabeca;
   fila->cabeca->next = cabeca;
@@ -44,6 +50,7 @@ void printEspera() {
 
 
 void addProcessoEspera(Processo p, Espera fila) {
+  fila->quantidadePrioridades[p->prioridade]++;
                                 /*Next     previous*/
   Link novo = newNodeCircular(p, fila->cabeca, fila->cabeca->previous);
   fila->cabeca->previous->next = novo;
@@ -116,7 +123,22 @@ int posicaoProcessoAtual(Espera fila) {
 }
 
 void somatorioTempoPermanenciaEspera(Espera fila, Processo processo) {
-  fila->sumPermanencia += (processo->fimEspera - processo->inicioEspera);
+  if (processo->tempoInicial >= 100) {
+    fila->maiores100++;
+    fila->sumPermanencia += (processo->fimEspera - processo->inicioEspera);
+    fila->tempoPermanencia[processo->prioridade] += (processo->fimEspera - processo->inicioEspera);
+    fila->quantidadePrioridades100[processo->prioridade]++;
+  }
+}
+
+double mediaTempoPermanenciaEspera(Espera fila) {
+  if (fila->sumPermanencia == 0) {
+    return 0;
+  }
+  double divisor, dividendo;
+  dividendo = (double)fila->sumPermanencia;
+  divisor = (double)fila->maiores100;
+  return dividendo/divisor;
 }
 
 void EsperaFree(Espera fila) {
@@ -133,6 +155,22 @@ void EsperaFree(Espera fila) {
   free(no);
   free(fila);
 }
+
+int sizePrioridade(Espera fila, int k) {
+  return fila->quantidadePrioridades[k];
+}
+
+double mediaPrioridadesEspera(Espera fila, int k) {
+  double divisor, dividendo;
+  if (fila->tempoPermanencia[k] == 0) {
+    return 0;
+  }
+  dividendo = (double)fila->tempoPermanencia[k];
+  divisor = (double)fila->quantidadePrioridades100[k];
+  return dividendo/divisor;
+}
+
+
 
 /* Implementação das rotinas auxiliares */
 static void *mallocSafe(size_t nbytes) {

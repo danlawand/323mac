@@ -4,9 +4,10 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+
 #include "MaxPQ.h"
 
-static Link* pq;
+static Item* pq;
 static int s;
 static int n;
 
@@ -16,70 +17,42 @@ static void *mallocSafe(size_t);
 static void sink(int);
 static void swim(int);
 static void stackResize(int);
-static bool less(Link, Link);
+static bool less(Item, Item);
 
 /* Rotinas principais */
 
 void MaxPQInit() {
-  pq = mallocSafe(sizeof(Link));
+  pq = mallocSafe(sizeof(Item));
   s = 1;
   n = 0;
 }
 
-void MaxPQInsert(Link no) {
+void MaxPQInsert(Item item) {
   if (n == s) stackResize(2*s);
-  no->processo->posicao = n;
-  pq[n++] = no;
+  /*Aqui entra o redimensionamento*/
+  pq[n++] = item;
   swim(n-1);
 }
 
-Processo MaxPQMax() {
-  return pq[0]->processo;
+Item MaxPQMax() {
+  return pq[0];
 }
 
-Link getMaxPQMax() {
-  Link node = pq[0];
+Item MaxPQDelMax() {
+  printf("OLA\n");
+  Item item = pq[0];
+  printf("MAQUE\n");
   pq[0] = pq[--n];
+  printf("PATE\n");
   sink(0);
+  printf("BULA\n");
 
   /* shrink size of array if necessary */
   if (n > 0 && n == s/4)
     stackResize(s/2);
 
-  return node;
+  return item;
 }
-
-
-Link getMaxPQMeio(int p) {
-  Link node = pq[p];
-  pq[p] = pq[--n];
-  sink(p);
-  /* shrink size of array if necessary */
-  if (n > 0 && n == s/4)
-    stackResize(s/2);
-
-  return node;
-}
-
-void MaxPQDelMax() {
-  pq[0] = pq[--n];
-  sink(0);
-
-  /* shrink size of array if necessary */
-  if (n > 0 && n == s/4)
-    stackResize(s/2);
-}
-
-
-void MaxPQDelMeio(int p) {
-  pq[p] = pq[--n];
-  sink(p);
-
-  /* shrink size of array if necessary */
-  if (n > 0 && n == s/4)
-    stackResize(s/2);
-}
-
 
 int MaxPQSize() {
   return n;
@@ -98,23 +71,18 @@ void MaxPQFree() {
 void printMaxPQ() {
   int i;
   for (i = 0; i < n; i++) {
-    imprimeNovoProcesso(pq[i]->processo);
+    printf("%d -- ", pq[i]);
   }
-  printf("_______________________\n");
+  printf("\n");
 }
 
 /* Implementação das rotinas auxiliares */
-static bool less(Link a, Link b) {
-  if (a->processo->prioridade == b->processo->prioridade) {
-    /*Se o tempo inicial do Pai for maior que do filho, troca*/
-    return a->processo->tempoInicial > b->processo->tempoInicial;
-  }
-  return a->processo->prioridade < b->processo->prioridade;
-
+static bool less(Item a, Item b) {
+  return a < b;
 }
 
 static void sink(int p) {
-  Link x = pq[p];
+  Item x = pq[p];
   int f = 2*p +1;
   if (f+1 < n && less(pq[f], pq[f+1])) f++;
   while(2*p+1 < n) {
@@ -123,28 +91,24 @@ static void sink(int p) {
       f++;
     if (!less(x, pq[f])) break;
     pq[p] = pq[f];
-    pq[p]->processo->posicao = p;
     p = f;
   }
   pq[p] = x;
-  pq[p]->processo->posicao = p;
 }
 
 static void swim(int f) {
-  Link x = pq[f];
+  Item x = pq[f];
   while (f > 0 && less(pq[(f-1)/2], x)) {
     pq[f] = pq[(f-1)/2];
-    pq[f]->processo->posicao = f;
     f = (f-1)/2;
   }
   pq[f] = x;
-  pq[f]->processo->posicao = f;
 }
 
 
 static void stackResize(int capacity) {
   int i;
-  Link *tmp, *b = mallocSafe(capacity*sizeof(Link));
+  Item *tmp, *b = mallocSafe(capacity*sizeof(Item));
 
   if (capacity < n) {
     printf("Error: invalid capacity choice.\n");

@@ -1,5 +1,5 @@
 CC     = gcc
-CFLAGS = -Wall -g -pedantic -Wno-unused-result
+CFLAGS = -Wall -g -pedantic
 # -ansi
 RM     = rm
 OBJS   = SkipListST.o st.o client.o

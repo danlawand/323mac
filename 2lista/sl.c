@@ -9,13 +9,13 @@
 typedef struct snode {
     int key;
     int value;
-    struct snode **forward;
+    Link *forward;
 } snode;
 
 typedef struct skiplist {
     int level;
     int size;
-    struct snode *header;
+    Link header;
 } skiplist;
 
 skiplist *skiplist_init(skiplist *list)

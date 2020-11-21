@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-static Link first;
+static Link* first;
 static int n;
 static int MAXLEVELS;
 static int lgN;
@@ -12,15 +12,19 @@ static void *mallocSafe(size_t);
 
 
 void stInit(int cap) {
-  // int keys = mallocSafe(cap * sizeof(keys));
-  // int vals = mallocSafe(cap * sizeof(vals));
+  first = mallocSafe(cap * sizeof(Link));
+  for (int i = 0; i < cap; i++) {
+    first[i] =NULL;
+  }
+  lgN = 0;
   n = 0;
   s = cap;
+  MAXLEVELS = cap;
 }
 
 
 int stGet(int key) {
-  Link p = first;
+  Link p = first[lgN-1];
   Link q;
   int k;
   for (k = lgN-1; k >= 0; k--) {
@@ -37,7 +41,7 @@ void stPut(int key, int val) {
   Link *s, p, q;
   int k, levels;
   s = mallocSafe(MAXLEVELS * sizeof(Link));
-  p = first;
+  p = first[lgN-1];
   for (k = lgN-1; k >= 0; k--) {
     p = rank(key, p, k);
     q = p->next[k];
@@ -55,19 +59,22 @@ void stPut(int key, int val) {
     s[lgN] = first;
     lgN++; /* atualiza o no. níveis */
   }
+  printf("LgN %d \n", lgN);
   for (k = levels-1; k >= 0; k--) {
     q = s[k]->next[k];
     s[k]->next[k] = p;
     p->next[k] = q;
   }
   n++;
+  printf("eba\n" );
+
 }
 
 void stPrint() {
-  Link p = first, q;
+  Link p = first[lgN], q;
 
-  q = p->next[0];
-  printf("MAMAO\n");
+  q = NULL;
+  // printf("MAMAO\n");
   while (q != NULL) {
     printf("CAJU  \n");
     printf("%d -- ", q->key);
@@ -80,6 +87,7 @@ void stPrint() {
 // }
 
 int randLevel() {
+  printf("opa\n" );
   return lgN;
 }
 
@@ -88,7 +96,7 @@ static Link rank(int key, Link start, int k) {
   Link p, q;
   p = start;
   q = start->next[k];
-  while (q != NULL && (key - q->key) < 0) {
+  while (q != NULL && (key - q->key) > 0) {
     p = q;
     q = q->next[k];
   }
@@ -97,7 +105,7 @@ static Link rank(int key, Link start, int k) {
 
 
 static void *mallocSafe(size_t nbytes) {
-  void *p = malloc(nbytes);
+  void* p = malloc(nbytes);
 
   if (p == NULL) {
     printf("Erro: alocação de memória falhou no módulo Node.");

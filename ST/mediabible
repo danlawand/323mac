@@ -1,0 +1,14 @@
+0.2709162
+0.38092440000000005
+0.171545
+0.1628306
+0.13853580000000001
+0.1675462
+
+Número de Palavras encontradas 12892 em bible.txt
+N. de palavras na ABB                       0.2709162 segundos
+N. de palavras na ARN                       0.3809244 segundos
+N. de palavras no Hash com Encadeamento     0.171545 segundos
+N. de palavras no Hash com MTF              0.1628306 segundos
+N. de palavras no Hash com Linear Probing   0.1385358 segundos
+N. de palavras na TRIE                      0.1675462 segundos

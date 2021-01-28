@@ -1,0 +1,14 @@
+0.2217054
+0.3124066
+0.1416742
+0.13684020000000002
+0.1088354
+0.139229
+
+Número de Palavras encontradas 22876 em les-miserables.txt
+N. de palavras na ABB                       0.2217054 segundos
+N. de palavras na ARN                       0.3124066 segundos
+N. de palavras no Hash com Encadeamento     0.1416742 segundos
+N. de palavras no Hash com MTF              0.1368402 segundos
+N. de palavras no Hash com Linear Probing   0.1088354 segundos
+N. de palavras na TRIE                      0.139229 segundos
